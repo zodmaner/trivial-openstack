@@ -9,5 +9,6 @@
                #:alexandria)
   :serial t
   :components ((:file "package")
-               (:file "trivial-openstack")))
+               (:file "trivial-openstack")
+               (:file "openstack-compute-api")))
 
