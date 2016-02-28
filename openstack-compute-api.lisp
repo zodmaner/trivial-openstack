@@ -12,8 +12,6 @@
 
 ;;; Bindings for OpenStack Compute API are defined here.
 
-(uri-template:enable-uri-template-syntax)
-
 (defgeneric list-flavors (conn))
 
 (defmethod list-flavors ((conn connection))

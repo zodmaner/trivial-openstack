@@ -111,3 +111,7 @@
                                       ,http-method
                                       ,@lambda-list)))
        ,@body)))
+
+;; Binds the uri-template dispatch character for reading URI templates
+;; used in the bindings of Compute API
+(uri-template:enable-uri-template-syntax)
