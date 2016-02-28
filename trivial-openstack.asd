@@ -6,6 +6,7 @@
   :license "Specify license here"
   :depends-on (#:drakma
                #:st-json
+               #:uri-template
                #:alexandria)
   :serial t
   :components ((:file "package")
