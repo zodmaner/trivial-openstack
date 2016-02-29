@@ -105,9 +105,5 @@
     (when content
       (push content lambda-list)
       (push :content lambda-list))
-    `(let ((,stream (send-api-request (uri ,conn)
-                                      ,port
-                                      ,uri-path
-                                      ,http-method
-                                      ,@lambda-list)))
+    `(let ((,stream (send-api-request (uri ,conn) ,port ,uri-path ,http-method ,@lambda-list)))
        ,@body)))
