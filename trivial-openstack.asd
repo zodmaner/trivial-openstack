@@ -1,8 +1,8 @@
 ;;;; trivial-openstack.asd
 
 (asdf:defsystem #:trivial-openstack
-  :description "Describe trivial-openstack here"
-  :author "Your Name <your.name@example.com>"
+  :description "A simple Common Lisp OpenStack REST client."
+  :author "Smith Dhumbumroong <zodmaner@gmail.com>"
   :license "Specify license here"
   :depends-on (#:drakma
                #:st-json
