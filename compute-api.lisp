@@ -15,7 +15,7 @@
 (defgeneric list-flavors (conn))
 
 (defmethod list-flavors ((conn connection))
-  (let ((tenant-id (connection-tenant-id conn)))
+  (let ((tenant-id (tenant-id conn)))
     (with-connection (response conn :get "8774" #U/v2.1/{tenant-id}/flavors)
       (mapcar #'(lambda (jso)
                   (cons (st-json:getjso "name" jso)
@@ -34,7 +34,7 @@
 (defgeneric list-servers (conn))
 
 (defmethod list-servers ((conn connection))
-  (let ((tenant-id (connection-tenant-id conn)))
+  (let ((tenant-id (tenant-id conn)))
     (with-connection (response conn :get "8774" #U/v2/{tenant-id}/servers)
       (mapcar #'(lambda (jso)
                   (cons (st-json:getjso "name" jso)
@@ -44,7 +44,7 @@
 (defgeneric list-servers-detail (conn))
 
 (defmethod list-servers-detail ((conn connection))
-  (let ((tenant-id (connection-tenant-id conn)))
+  (let ((tenant-id (tenant-id conn)))
     (with-connection (response conn :get "8774" #U/v2/{tenant-id}/servers/detail)
       (mapcar #'(lambda (jso)
                   (cons (st-json:getjso "name" jso)
@@ -65,7 +65,7 @@
 (defgeneric create-server (server-name image-id flavor-id conn))
 
 (defmethod create-server (server-name image-id flavor-id (conn connection))
-  (let ((tenant-id (connection-tenant-id conn)))
+  (let ((tenant-id (tenant-id conn)))
     (with-connection (response conn :post "8774" #U/v2.1/{tenant-id}/servers
                                (st-json:write-json-to-string
                                 (alexandria:plist-hash-table
@@ -79,14 +79,14 @@
 (defgeneric delete-server (server-id conn))
 
 (defmethod delete-server (server-id (conn connection))
-  (let ((tenant-id (connection-tenant-id conn)))
+  (let ((tenant-id (tenant-id conn)))
     (with-connection (response conn :delete "8774" #U/v2.1/{tenant-id}/servers/{server-id})
       response)))
 
 (defgeneric list-floating-ips (conn))
 
 (defmethod list-floating-ips ((conn connection))
-  (let ((tenant-id (connection-tenant-id conn)))
+  (let ((tenant-id (tenant-id conn)))
     (with-connection (response conn :get "8774" #U/v2.1/{tenant-id}/os-floating-ips)
       (mapcar #'(lambda (jso)
                   (cons (st-json:getjso "ip" jso)
@@ -98,7 +98,7 @@
 (defgeneric create-floating-ip (conn))
 
 (defmethod create-floating-ip ((conn connection))
-  (let ((tenant-id (connection-tenant-id conn)))
+  (let ((tenant-id (tenant-id conn)))
     (with-connection (response conn :post "8774" #U/v2.1/{tenant-id}/os-floating-ips
                                (st-json:write-json-to-string
                                 (alexandria:plist-hash-table
@@ -108,7 +108,7 @@
 (defgeneric associate-floating-ip (server-id floating-ip conn))
 
 (defmethod associate-floating-ip (server-id floating-ip (conn connection))
-  (let ((tenant-id (connection-tenant-id conn)))
+  (let ((tenant-id (tenant-id conn)))
     (with-connection (response conn :post "8774" #U/v2.1/{tenant-id}/servers/{server-id}/action
                                (st-json:write-json-to-string
                                 (alexandria:plist-hash-table
@@ -120,14 +120,14 @@
 (defgeneric list-default-security-group-rules (conn))
 
 (defmethod list-default-security-group-rules ((conn connection))
-  (let ((tenant-id (connection-tenant-id conn)))
+  (let ((tenant-id (tenant-id conn)))
     (with-connection (response conn :get "8774" #U/v2.1/{tenant-id}/os-security-group-default-rules)
       (st-json:read-json response))))
 
 (defgeneric create-default-security-group-rule (rule conn))
 
 (defmethod create-default-security-group-rule (rule (conn connection))
-  (let ((tenant-id (connection-tenant-id conn)))
+  (let ((tenant-id (tenant-id conn)))
     (with-connection (response conn :post "8774" #U/v2.1/{tenant-id}/os-security-group-default-rules
                                rule)
       response)))

@@ -31,27 +31,27 @@
 
 (defclass connection ()
   ((uri :initarg :uri
-        :reader connection-uri)
+        :reader uri)
    (username :initarg :username
-             :reader connection-username)
+             :reader username)
    (password :initarg :password
-             :reader connection-password)
+             :reader password)
    (tenant-name :initarg :tenant-name
                 :initform nil
-                :accessor connection-tenant-name)
+                :accessor tenant-name)
    (tenant-id :initform nil
-              :accessor connection-tenant-id)
+              :accessor tenant-id)
    (token :initform nil
-          :accessor connection-token)
+          :accessor token)
    (token-expiration-time :initform nil
-                          :accessor connection-token-expiration-time)))
+                          :accessor token-expiration-time)))
 
 (defgeneric authenticate (conn))
 
 (defmethod authenticate ((conn connection))
   (let ((response
          (send-api-request
-          (connection-uri conn)
+          (uri conn)
           "5000"
           "/v2.0/tokens"
           :post
@@ -59,16 +59,16 @@
                     (alexandria:plist-hash-table
                      (list "auth"
                            (alexandria:plist-hash-table
-                            (list "tenantName" (if (null (connection-tenant-name conn))
+                            (list "tenantName" (if (null (tenant-name conn))
                                                    (progn
-                                                     (setf (connection-tenant-name conn)
-                                                           (connection-username conn))
-                                                     (connection-tenant-name conn))
-                                                   (connection-tenant-name conn))
+                                                     (setf (tenant-name conn)
+                                                           (username conn))
+                                                     (tenant-name conn))
+                                                   (tenant-name conn))
                                   "passwordCredentials"
                                   (alexandria:plist-hash-table
-                                   (list "username" (connection-username conn)
-                                         "password" (connection-password conn)))))))))))
+                                   (list "username" (username conn)
+                                         "password" (password conn)))))))))))
     response))
 
 (defun parse-token-object (stream)
@@ -82,16 +82,16 @@
 
 (defmethod initialize-instance :after ((conn connection) &key)
   (let ((token-jso (parse-token-object (authenticate conn))))
-    (setf (connection-token conn) (st-json:getjso "id" token-jso))
-    (setf (connection-tenant-id conn)
+    (setf (token conn) (st-json:getjso "id" token-jso))
+    (setf (tenant-id conn)
           (st-json:getjso "id" (st-json:getjso "tenant" token-jso)))
-    (setf (connection-token-expiration-time conn)
+    (setf (token-expiration-time conn)
           (local-time:parse-timestring (st-json:getjso "expires" token-jso)))))
 
-(defmethod connection-token :before ((conn connection))
-  (when (local-time:timestamp>= (local-time:now) (connection-token-expiration-time conn))
+(defmethod token :before ((conn connection))
+  (when (local-time:timestamp>= (local-time:now) (token-expiration-time conn))
     (let ((token-jso (parse-token-object (authenticate conn))))
-      (setf (connection-token conn) (st-json:getjso "id" token-jso)))))
+      (setf (token conn) (st-json:getjso "id" token-jso)))))
 
 (defun make-connection (uri username password &optional tenant-name)
   (make-instance 'connection
@@ -101,11 +101,11 @@
                  :tenant-name tenant-name))
 
 (defmacro with-connection ((stream conn http-method port uri-path &optional content) &body body)
-  (let ((lambda-list (list :x-auth-token `(connection-token ,conn))))
+  (let ((lambda-list (list :x-auth-token `(token ,conn))))
     (when content
       (push content lambda-list)
       (push :content lambda-list))
-    `(let ((,stream (send-api-request (connection-uri ,conn)
+    `(let ((,stream (send-api-request (uri ,conn)
                                       ,port
                                       ,uri-path
                                       ,http-method
