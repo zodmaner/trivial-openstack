@@ -91,7 +91,9 @@
 (defmethod token :before ((conn connection))
   (when (local-time:timestamp>= (local-time:now) (token-expiration-time conn))
     (let ((token-jso (parse-token-object (authenticate conn))))
-      (setf (token conn) (st-json:getjso "id" token-jso)))))
+      (setf (token conn) (st-json:getjso "id" token-jso))
+      (setf (token-expiration-time conn)
+            (local-time:parse-timestring (st-json:getjso "expires" token-jso))))))
 
 (defun make-connection (uri username password &optional tenant-name)
   (make-instance 'connection
