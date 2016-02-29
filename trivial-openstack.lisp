@@ -43,8 +43,6 @@
               :accessor connection-tenant-id)
    (token :initform nil
           :accessor connection-token)
-   (token-creation-time :initform nil
-                        :accessor connection-token-creation-time)
    (token-expiration-time :initform nil
                           :accessor connection-token-expiration-time)))
 
@@ -87,14 +85,13 @@
     (setf (connection-token conn) (st-json:getjso "id" token-jso))
     (setf (connection-tenant-id conn)
           (st-json:getjso "id" (st-json:getjso "tenant" token-jso)))
-    (setf (connection-token-creation-time conn) (get-universal-time))
-    (setf (connection-token-expiration-time conn) (st-json:getjso "expires" token-jso))))
+    (setf (connection-token-expiration-time conn)
+          (local-time:parse-timestring (st-json:getjso "expires" token-jso)))))
 
 (defmethod connection-token :before ((conn connection))
-  (when (<= 3000 (- (get-universal-time) (connection-token-creation-time conn)))
+  (when (local-time:timestamp>= (local-time:now) (connection-token-expiration-time conn))
     (let ((token-jso (parse-token-object (authenticate conn))))
-      (setf (connection-token conn) (st-json:getjso "id" token-jso))
-      (setf (connection-token-creation-time conn) (get-universal-time)))))
+      (setf (connection-token conn) (st-json:getjso "id" token-jso)))))
 
 (defun make-connection (uri username password &optional tenant-name)
   (make-instance 'connection
