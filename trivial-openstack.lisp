@@ -4,6 +4,9 @@
 
 ;;; "trivial-openstack" goes here. Hacks and glory await!
 
+;; Binds the default dispatch character for reading URI templates
+(uri-template:enable-uri-template-syntax)
+
 (defmacro send-api-request (uri port uri-path http-method &key x-auth-token content)
   (let ((lambda-list (list :method http-method)))
     (when x-auth-token
@@ -111,7 +114,3 @@
                                       ,http-method
                                       ,@lambda-list)))
        ,@body)))
-
-;; Binds the uri-template dispatch character for reading URI templates
-;; used in the bindings of Compute API in compute-api.lisp.
-(uri-template:enable-uri-template-syntax)
