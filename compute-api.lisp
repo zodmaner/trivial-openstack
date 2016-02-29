@@ -1,4 +1,4 @@
-;;;; openstack-compute-api.lisp
+;;;; compute-api.lisp
 
 (in-package #:trivial-openstack)
 

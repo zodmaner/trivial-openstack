@@ -113,5 +113,5 @@
        ,@body)))
 
 ;; Binds the uri-template dispatch character for reading URI templates
-;; used in the bindings of Compute API in openstack-compute-api.lisp.
+;; used in the bindings of Compute API in compute-api.lisp.
 (uri-template:enable-uri-template-syntax)
