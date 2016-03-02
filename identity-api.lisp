@@ -1,8 +1,8 @@
-;;;; keystone-api.lisp
+;;;; identity-api.lisp
 
 (in-package #:trivial-openstack)
 
-;;; Bindings for OpenStack Keystone REST API are defined here
+;;; Bindings for OpenStack Keystone identity API are defined here
 
 ;;; User's credential
 
