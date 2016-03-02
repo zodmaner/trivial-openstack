@@ -14,7 +14,7 @@
   "Retrieves a public URL of an OpenStack service."
   (cdr-assoc "public-url" (cdr-assoc "endpoints" (cdr-assoc service endpoints))))
 
-;;; Bindings for OpenStack Compute API are defined here.
+;;; Bindings for OpenStack Nova Compute API are defined here.
 
 (defgeneric list-flavors (endpoints os-auth-token))
 
@@ -26,17 +26,6 @@
                 (cons (st-json:getjso "name" jso)
                       (st-json:getjso "id" jso)))
             (st-json:getjso "flavors" (st-json:read-json response)))))
-
-(defgeneric list-images (endpoints os-auth-token))
-
-(defmethod list-images (endpoints (os-auth-token os-auth-token))
-  (with-api-request response
-      (os-auth-token :get (format nil "~A~A"
-                                  (get-public-url "glance" endpoints) "/v2/images"))
-    (mapcar #'(lambda (jso)
-                (cons (st-json:getjso "name" jso)
-                      (st-json:getjso "id" jso)))
-            (st-json:getjso "images" (st-json:read-json response)))))
 
 (defgeneric list-servers (endpoints os-auth-token))
 

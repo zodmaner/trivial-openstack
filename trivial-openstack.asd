@@ -12,6 +12,7 @@
   :serial t
   :components ((:file "package")
                (:file "trivial-openstack")
-               (:file "keystone-api")
+               (:file "identity-api")
+               (:file "image-api")
                (:file "compute-api")))
 
