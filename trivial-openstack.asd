@@ -6,7 +6,6 @@
   :license "LGPL"
   :depends-on (#:drakma
                #:st-json
-               #:uri-template
                #:local-time
                #:alexandria)
   :serial t
