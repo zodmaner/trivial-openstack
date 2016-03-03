@@ -24,7 +24,7 @@
                    (password password) (tenant-name tenant-name)) os-c
     (let ((response
            (send-api-request
-            #Uhttp://{hostname}:5000/v2.0/tokens
+            (format nil "http://~A:5000/v2.0/tokens" hostname)
             :post
             :content (st-json:write-json-to-string
                       (alexandria:plist-hash-table
