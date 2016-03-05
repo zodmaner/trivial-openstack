@@ -16,15 +16,15 @@
    (tenant-name :initarg :tenant-name
                 :initform nil
                 :accessor tenant-name))
-  (:documentation "A user credential payload, with all the necessary 
+  (:documentation "A user credential payload, with all the necessary
 information to authenticate a user.
 
-Requires at least a hostname of the Keystone identity service, a user's 
-username and password, with the tenant-name being optional that will 
+Requires at least a hostname of the Keystone identity service, a user's
+username and password, with the tenant-name being optional that will
 defaults to using username if not provided."))
 
 (defgeneric send-credential-payload (os-c)
-  (:documentation "Sends a credential payload to the Keystone identity 
+  (:documentation "Sends a credential payload to the Keystone identity
 service endpoint and returns a stream of response."))
 
 (defmethod send-credential-payload ((os-c os-credential))
@@ -58,7 +58,7 @@ service endpoint and returns a stream of response."))
                  :tenant-name tenant-name))
 
 (defgeneric retrieve-endpoints (os-c)
-  (:documentation "Uses the credential object to authenticate a user with the 
+  (:documentation "Uses the credential object to authenticate a user with the
 Keystone service and returns an alist map of currently active service endpoints."))
 
 (defmethod retrieve-endpoints ((os-c os-credential))
@@ -89,10 +89,10 @@ Keystone service and returns an alist map of currently active service endpoints.
                :reader credential)
    (token :accessor token)
    (token-expiration-time :accessor token-expiration-time))
-  (:documentation "An authentication token returned by the Keystone identity service, 
+  (:documentation "An authentication token returned by the Keystone identity service,
 along with all the necessary information to reacquire the token once it expires.
 
-Requires only an instant of user credential payload, other slots will be initialized 
+Requires only an instant of user credential payload, other slots will be initialized
 when we instantiate the object."))
 
 (defmethod initialize-instance :after ((os-auth-token os-auth-token) &key)
@@ -111,7 +111,7 @@ its expiration time, then store both of them into their respective slots."
             (local-time:parse-timestring (st-json:getjso "expires" token-jso))))))
 
 (defmethod token :before ((os-auth-token os-auth-token))
-  "Before reading a value of the token's slot, check if it already expires. If it does, 
+  "Before reading a value of the token's slot, check if it already expires. If it does,
 then uses the credential payload to re-authenticate and reacquire the token."
   (with-accessors ((os-c credential) (token token)
                    (token-expiration-time token-expiration-time)) os-auth-token

@@ -5,10 +5,10 @@
 ;;; "trivial-openstack" goes here. Hacks and glory await!
 
 (defmacro send-api-request (uri http-method &key x-auth-token content)
-  "Sends an API request to an OpenStack endpoint at URI and returns a stream 
+  "Sends an API request to an OpenStack endpoint at URI and returns a stream
 of the response body.
 
-The :x-auth-token keyword can be used to send the authentication token to the 
+The :x-auth-token keyword can be used to send the authentication token to the
 endpoint, while the :content keyword can be used to send any content with the
 request."
   (let ((lambda-list (list :method http-method)))
