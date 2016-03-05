@@ -20,8 +20,8 @@
 information to authenticate a user.
 
 Requires at least a hostname of the Keystone identity service, a user's
-username and password, with the tenant-name being optional that will
-defaults to using username if not provided."))
+username and password, with the tenant-name being an optional value that  
+will defaults to using username if not provided."))
 
 (defgeneric send-credential-payload (os-c)
   (:documentation "Sends a credential payload to the Keystone identity
