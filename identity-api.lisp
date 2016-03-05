@@ -113,8 +113,8 @@ its expiration time, then store both of them into their respective slots."
             (local-time:parse-timestring (st-json:getjso "expires" token-jso))))))
 
 (defmethod token :before ((os-auth-token os-auth-token))
-  "Before reading a value of the token's slot, check if it already expires. If it does,
-then uses the credential payload to re-authenticate and reacquire the token."
+  "Before reading a value of the token's slot, check if it has already expired.
+If it does, then uses the credential payload to re-authenticate and reacquire the token."
   (with-accessors ((os-c credential) (token token)
                    (token-expiration-time token-expiration-time)) os-auth-token
     (when (local-time:timestamp>= (local-time:now) token-expiration-time)
