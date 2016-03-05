@@ -15,9 +15,17 @@
              :reader password)
    (tenant-name :initarg :tenant-name
                 :initform nil
-                :accessor tenant-name)))
+                :accessor tenant-name))
+  (:documentation "A user credential payload, with all the necessary 
+information to authenticate a user.
 
-(defgeneric send-credential-payload (os-c))
+Requires at least a hostname of the Keystone identity service, a user's 
+username and password, with the tenant-name being optional that will 
+defaults to using username if not provided."))
+
+(defgeneric send-credential-payload (os-c)
+  (:documentation "Sends a credential payload to the Keystone identity 
+service endpoint and returns a stream of response."))
 
 (defmethod send-credential-payload ((os-c os-credential))
   (with-accessors ((hostname keystone-hostname) (username username)
@@ -42,15 +50,18 @@
       response)))
 
 (defun make-credential (hostname username password &optional tenant-name)
+  "Makes and returns a new instant of os-credential class."
   (make-instance 'os-credential
                  :keystone-hostname hostname
                  :username username
                  :password password
                  :tenant-name tenant-name))
 
-(defgeneric authenticate (os-c))
+(defgeneric retrieve-endpoints (os-c)
+  (:documentation "Uses the credential object to authenticate a user with the 
+Keystone service and returns an alist map of currently active service endpoints."))
 
-(defmethod authenticate ((os-c os-credential))
+(defmethod retrieve-endpoints ((os-c os-credential))
   (let* ((response (send-credential-payload os-c))
          (token-service-catalog-jso
           (st-json:getjso "access" (st-json:read-json response)))
@@ -68,9 +79,8 @@
                                              (st-json:getjso "adminURL" endpoints)
                                              (st-json:getjso "region" endpoints)
                                              (st-json:getjso "publicURL" endpoints))))))))
-                     (st-json:getjso "serviceCatalog" token-service-catalog-jso)))
-         (auth-token (make-instance 'os-auth-token :credential os-c)))
-    (values auth-token endpoints)))
+                     (st-json:getjso "serviceCatalog" token-service-catalog-jso))))
+    endpoints))
 
 ;;; User's authentication token
 
@@ -78,9 +88,16 @@
   ((credential :initarg :credential
                :reader credential)
    (token :accessor token)
-   (token-expiration-time :accessor token-expiration-time)))
+   (token-expiration-time :accessor token-expiration-time))
+  (:documentation "An authentication token returned by the Keystone identity service, 
+along with all the necessary information to reacquire the token once it expires.
+
+Requires only an instant of user credential payload, other slots will be initialized 
+when we instantiate the object."))
 
 (defmethod initialize-instance :after ((os-auth-token os-auth-token) &key)
+  "Uses an instant of user credential payload to authenticate and retrieve a token and
+its expiration time, then store both of them into their respective slots."
   (with-accessors ((os-c credential) (token token)
                    (token-expiration-time token-expiration-time)) os-auth-token
     (let ((token-jso (st-json:getjso
@@ -94,6 +111,8 @@
             (local-time:parse-timestring (st-json:getjso "expires" token-jso))))))
 
 (defmethod token :before ((os-auth-token os-auth-token))
+  "Before reading a value of the token's slot, check if it already expires. If it does, 
+then uses the credential payload to re-authenticate and reacquire the token."
   (with-accessors ((os-c credential) (token token)
                    (token-expiration-time token-expiration-time)) os-auth-token
     (when (local-time:timestamp>= (local-time:now) token-expiration-time)

@@ -5,18 +5,18 @@
 ;;; Helper functions for retrieving values of response parameters.
 
 (defun cdr-assoc (keyword alist &key (test #'string=))
+  "Given a keyword, retrieves a value from an alist."
   (cdr (assoc keyword alist :test test)))
 
-(defun get-parameter (keyword parameters)
-  (cdr-assoc keyword parameters))
-
 (defun get-public-url (service endpoints)
-  "Retrieves a public URL of an OpenStack service."
+  "Retrieves a public URL of an OpenStack service from an alist map of currently
+active endpoints."
   (cdr-assoc "public-url" (cdr-assoc "endpoints" (cdr-assoc service endpoints))))
 
 ;;; Bindings for OpenStack Nova Compute API are defined here.
 
-(defgeneric list-flavors (endpoints os-auth-token))
+(defgeneric list-flavors (endpoints os-auth-token)
+  (:documentation "Lists all of the currently available flavors."))
 
 (defmethod list-flavors (endpoints (os-auth-token os-auth-token))
   (with-api-request response
@@ -27,7 +27,8 @@
                       (st-json:getjso "id" jso)))
             (st-json:getjso "flavors" (st-json:read-json response)))))
 
-(defgeneric list-servers (endpoints os-auth-token))
+(defgeneric list-servers (endpoints os-auth-token)
+  (:documentation "Lists all of the currently active servers."))
 
 (defmethod list-servers (endpoints (os-auth-token os-auth-token))
   (with-api-request response
@@ -38,7 +39,8 @@
                       (st-json:getjso "id" jso)))
             (st-json:getjso "servers" (st-json:read-json response)))))
 
-(defgeneric list-servers-detail (endpoints os-auth-token))
+(defgeneric list-servers-detail (endpoints os-auth-token)
+  (:documentation "Lists all of the currently active servers in detail."))
 
 (defmethod list-servers-detail (endpoints (os-auth-token os-auth-token))
   (with-api-request response
@@ -60,7 +62,8 @@
                                           jso)))))))
             (st-json:getjso "servers" (st-json:read-json response)))))
 
-(defgeneric create-server (server-name image-id flavor-id endpoints os-auth-token))
+(defgeneric create-server (server-name image-id flavor-id endpoints os-auth-token)
+  (:documentation "Creates a new server."))
 
 (defmethod create-server (server-name image-id flavor-id endpoints (os-auth-token os-auth-token))
   (with-api-request response
@@ -75,7 +78,8 @@
                                     "flavorRef" flavor-id))))))
     (st-json:getjso "id" (st-json:getjso "server" (st-json:read-json response)))))
 
-(defgeneric delete-server (server-id endpoints os-auth-token))
+(defgeneric delete-server (server-id endpoints os-auth-token)
+  (:documentation "Deletes a server."))
 
 (defmethod delete-server (server-id endpoints (os-auth-token os-auth-token))
   (with-api-request response
@@ -83,7 +87,8 @@
                                      (get-public-url "nova" endpoints) "/servers/" server-id))
     response))
 
-(defgeneric list-floating-ips (endpoints os-auth-token))
+(defgeneric list-floating-ips (endpoints os-auth-token)
+  (:documentation "Lists all of the currently allocated floating IPs."))
 
 (defmethod list-floating-ips (endpoints (os-auth-token os-auth-token))
   (with-api-request response
@@ -96,7 +101,8 @@
                                      (st-json:getjso "pool" jso)))))
             (st-json:getjso "floating_ips" (st-json:read-json response)))))
 
-(defgeneric create-floating-ip (endpoints os-auth-token))
+(defgeneric create-floating-ip (endpoints os-auth-token)
+  (:documentation "Creates/allocates a new floating IP."))
 
 (defmethod create-floating-ip (endpoints (os-auth-token os-auth-token))
   (with-api-request response
@@ -107,7 +113,8 @@
                        (list "pool" "public"))))
     (st-json:getjso "ip" (st-json:getjso "floating_ip" (st-json:read-json response)))))
 
-(defgeneric associate-floating-ip (server-id floating-ip endpoints os-auth-token))
+(defgeneric associate-floating-ip (server-id floating-ip endpoints os-auth-token)
+  (:documentation "Associates a floating IP with an active server."))
 
 (defmethod associate-floating-ip (server-id floating-ip endpoints (os-auth-token os-auth-token))
   (with-api-request response
@@ -121,7 +128,8 @@
                               (list "address" floating-ip))))))
     response))
 
-(defgeneric list-default-security-group-rules (endpoints os-auth-token))
+(defgeneric list-default-security-group-rules (endpoints os-auth-token)
+  (:documentation "Lists all the currently active security rules in the default security group."))
 
 (defmethod list-default-security-group-rules (endpoints (os-auth-token os-auth-token))
   (with-api-request response
@@ -130,7 +138,8 @@
                                   "/os-security-group-default-rules"))
     (st-json:read-json response)))
 
-(defgeneric create-default-security-group-rule (rule endpoints os-auth-token))
+(defgeneric create-default-security-group-rule (rule endpoints os-auth-token)
+  (:documentation "Creates a new security rule in the default security group."))
 
 (defmethod create-default-security-group-rule (rule endpoints (os-auth-token os-auth-token))
   (with-api-request response
@@ -141,6 +150,7 @@
     response))
 
 (defun set-security-rule-accept-all-icmp (endpoints os-auth-token)
+  "Adds a security rule that accepts all incoming ICMP connection."
   (create-default-security-group-rule (st-json:write-json-to-string
                                        (alexandria:plist-hash-table
                                         (list "security_group_default_rule"
@@ -153,6 +163,7 @@
                                       os-auth-token))
 
 (defun set-security-rule-accept-all-tcp (endpoints os-auth-token)
+  "Adds a security rule that accepts all incoming TCP connection."
   (create-default-security-group-rule (st-json:write-json-to-string
                                        (alexandria:plist-hash-table
                                         (list "security_group_default_rule"
@@ -165,6 +176,7 @@
                                       os-auth-token))
 
 (defun set-security-rule-accept-all-udp (endpoints os-auth-token)
+  "Adds a security rule that accepts all incoming UDP connection."
   (create-default-security-group-rule (st-json:write-json-to-string
                                        (alexandria:plist-hash-table
                                         (list "security_group_default_rule"
