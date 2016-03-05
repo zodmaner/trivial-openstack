@@ -59,6 +59,8 @@ service endpoint and returns a stream of response."))
                  :password password
                  :tenant-name tenant-name))
 
+;;; OpenStack service endpoints
+
 (defgeneric retrieve-endpoints (os-c)
   (:documentation "Uses the credential object to authenticate a user with the
 Keystone service and returns an alist map of currently active service endpoints."))
