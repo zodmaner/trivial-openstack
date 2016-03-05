@@ -19,8 +19,8 @@
   (:documentation "A user credential payload, with all the necessary
 information to authenticate a user.
 
-Requires at least a hostname of the Keystone identity service, a username,
-and a password.
+Requires a hostname of the Keystone identity service, a username, and
+a password.
 
 The tenant-name is an optional value that will default to username if
 not provided."))
