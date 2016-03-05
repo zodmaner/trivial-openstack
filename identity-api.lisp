@@ -4,7 +4,7 @@
 
 ;;; Bindings for OpenStack Keystone identity API are defined here
 
-;;; User's credential
+;;; User's credential payload
 
 (defclass os-credential ()
   ((keystone-hostname :initarg :keystone-hostname
