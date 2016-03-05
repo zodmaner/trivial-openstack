@@ -6,7 +6,8 @@
 
 (defmacro send-api-request (uri http-method &key x-auth-token content)
   "Sends an API request to an OpenStack endpoint at URI and returns a stream
-of the response body.
+of the response body, NIL if the stream has zero length, or throw an error if
+the returned status code is not 200, 202, or 204.
 
 The :x-auth-token keyword can be used to send the authentication token to the
 endpoint, while the :content keyword can be used to send any content with the
