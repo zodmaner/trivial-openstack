@@ -38,7 +38,7 @@ request."
   "Sends an API request with an authentication token to an OpenStack endpoint at URI, and binds
 a stream of the response body to a specified symbol.
 
-Also, a content, which is usually a JSON object, can be sent along with the request."
+Also, a optional content, which is usually a JSON object, can be sent along with the request."
   (let ((lambda-list (list :x-auth-token `(token ,os-auth-token))))
     (when content
       (push content lambda-list)
