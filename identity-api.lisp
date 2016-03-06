@@ -137,5 +137,6 @@ currently active endpoints and authentication token."
                               :username username
                               :password password
                               :tenant-name tenant-name))
-         (endpoints (retrieve-endpoints os-c)))
-    (values endpoints os-c)))
+         (endpoints (retrieve-endpoints os-c))
+         (os-a-t (make-instance 'os-auth-token :credential os-c)))
+    (values endpoints os-a-t)))
