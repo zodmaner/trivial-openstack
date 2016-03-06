@@ -76,7 +76,7 @@ active endpoints."
     (with-os-response response
         ((format nil "~A~A"
                  (get-public-url "nova" endpoints) "/servers")
-         :post token 
+         :post token
          (st-json:write-json-to-string
           (alexandria:plist-hash-table
            (list "server"
@@ -121,7 +121,7 @@ active endpoints."
     (with-os-response response
         ((format nil "~A~A"
                  (get-public-url "nova" endpoints) "/os-floating-ips")
-         :post token 
+         :post token
          (st-json:write-json-to-string
           (alexandria:plist-hash-table
            (list "pool" "public"))))
