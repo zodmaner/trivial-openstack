@@ -4,14 +4,18 @@
 
 ;;; "trivial-openstack" goes here. Hacks and glory await!
 
-(defmacro send-api-request (uri http-method &key x-auth-token content)
-  "Sends an API request to an OpenStack endpoint at URI and returns a stream
-of the response body, NIL if the stream has zero length, or throw an error if
-the returned status code is not 200, 202, or 204.
+(defmacro with-os-response (stream (uri http-method &optional x-auth-token content) &body body)
+  "Sends an API request to an OpenStack endpoint at URI and binds a stream of
+the response body that is returned by an OpenStack service to a user specified
+stream symbol.
 
-The :x-auth-token keyword can be used to send the authentication token to the
-endpoint, while the :content keyword can be used to send any content with the
-request."
+If the returned stream has zero length, then NIL will be bound to the stream
+symbol. If an error status code is returned, then the function will throw an
+error.
+
+The x-auth-token optional argument can be used to send the authentication token
+to the endpoint, while the content optional argument can be used to send any
+content with the request."
   (let ((lambda-list (list :method http-method)))
     (when x-auth-token
       (push `(list (cons "X-Auth-Token" ,x-auth-token)) lambda-list)
@@ -30,18 +34,6 @@ request."
                (= status-code 202)
                (= status-code 204))
            (when (not (null (flexi-streams:peek-byte response-body-stream nil nil nil)))
-             response-body-stream)
+             (let ((,stream response-body-stream))
+               ,@body))
            (error (format nil "Error code ~A, ~A." status-code reason-phase))))))
-
-(defmacro with-api-request (stream (os-auth-token http-method endpoint-uri &optional content)
-                            &body body)
-  "Sends an API request with an authentication token to an OpenStack endpoint at URI, and binds
-a stream of the response body to a specified symbol.
-
-Also, a optional content, which is usually a JSON object, can be sent along with the request."
-  (let ((lambda-list (list :x-auth-token `(token ,os-auth-token))))
-    (when content
-      (push content lambda-list)
-      (push :content lambda-list))
-    `(let ((,stream (send-api-request ,endpoint-uri ,http-method ,@lambda-list)))
-       ,@body)))

@@ -19,137 +19,156 @@ active endpoints."
   (:documentation "Lists all of the currently available flavors."))
 
 (defmethod list-flavors (endpoints (os-auth-token os-auth-token))
-  (with-api-request response
-      (os-auth-token :get (format nil "~A~A"
-                                  (get-public-url "nova" endpoints) "/flavors"))
-    (mapcar #'(lambda (jso)
-                (cons (st-json:getjso "name" jso)
-                      (st-json:getjso "id" jso)))
-            (st-json:getjso "flavors" (st-json:read-json response)))))
+  (with-accessors ((token token)) os-auth-token
+    (with-os-response response
+        ((format nil "~A~A"
+                 (get-public-url "nova" endpoints) "/flavors")
+         :get token nil)
+      (mapcar #'(lambda (jso)
+                  (cons (st-json:getjso "name" jso)
+                        (st-json:getjso "id" jso)))
+              (st-json:getjso "flavors" (st-json:read-json response))))))
 
 (defgeneric list-servers (endpoints os-auth-token)
   (:documentation "Lists all of the currently active servers."))
 
 (defmethod list-servers (endpoints (os-auth-token os-auth-token))
-  (with-api-request response
-      (os-auth-token :get (format nil "~A~A"
-                                  (get-public-url "nova" endpoints) "/servers"))
-    (mapcar #'(lambda (jso)
-                (cons (st-json:getjso "name" jso)
-                      (st-json:getjso "id" jso)))
-            (st-json:getjso "servers" (st-json:read-json response)))))
+  (with-accessors ((token token)) os-auth-token
+    (with-os-response response
+        ((format nil "~A~A"
+                 (get-public-url "nova" endpoints) "/servers")
+         :get token nil)
+      (mapcar #'(lambda (jso)
+                  (cons (st-json:getjso "name" jso)
+                        (st-json:getjso "id" jso)))
+              (st-json:getjso "servers" (st-json:read-json response))))))
 
 (defgeneric list-servers-detail (endpoints os-auth-token)
   (:documentation "Lists all of the currently active servers in detail."))
 
 (defmethod list-servers-detail (endpoints (os-auth-token os-auth-token))
-  (with-api-request response
-      (os-auth-token :get (format nil "~A~A"
-                                  (get-public-url "nova" endpoints) "/servers/detail"))
-    (mapcar #'(lambda (jso)
-                (cons (st-json:getjso "name" jso)
-                      (pairlis (list "id" "status" "addresses")
-                               (list
-                                (st-json:getjso "id" jso)
-                                (st-json:getjso "status" jso)
-                                (mapcar #'(lambda (jso)
-                                            (cons (st-json:getjso "OS-EXT-IPS:type" jso)
-                                                  (st-json:getjso "addr" jso)))
-                                        (st-json:getjso
-                                         "private"
-                                         (st-json:getjso
-                                          "addresses"
-                                          jso)))))))
-            (st-json:getjso "servers" (st-json:read-json response)))))
+  (with-accessors ((token token)) os-auth-token
+    (with-os-response response
+        ((format nil "~A~A"
+                 (get-public-url "nova" endpoints) "/servers/detail")
+         :get token nil)
+      (mapcar #'(lambda (jso)
+                  (cons (st-json:getjso "name" jso)
+                        (pairlis (list "id" "status" "addresses")
+                                 (list
+                                  (st-json:getjso "id" jso)
+                                  (st-json:getjso "status" jso)
+                                  (mapcar #'(lambda (jso)
+                                              (cons (st-json:getjso "OS-EXT-IPS:type" jso)
+                                                    (st-json:getjso "addr" jso)))
+                                          (st-json:getjso
+                                           "private"
+                                           (st-json:getjso
+                                            "addresses"
+                                            jso)))))))
+              (st-json:getjso "servers" (st-json:read-json response))))))
 
 (defgeneric create-server (server-name image-id flavor-id endpoints os-auth-token)
   (:documentation "Creates a new server."))
 
 (defmethod create-server (server-name image-id flavor-id endpoints (os-auth-token os-auth-token))
-  (with-api-request response
-      (os-auth-token :post (format nil "~A~A"
-                                   (get-public-url "nova" endpoints) "/servers")
-                     (st-json:write-json-to-string
-                      (alexandria:plist-hash-table
-                       (list "server"
-                             (alexandria:plist-hash-table
-                              (list "name" server-name
-                                    "imageRef" image-id
-                                    "flavorRef" flavor-id))))))
-    (st-json:getjso "id" (st-json:getjso "server" (st-json:read-json response)))))
+  (with-accessors ((token token)) os-auth-token
+    (with-os-response response
+        ((format nil "~A~A"
+                 (get-public-url "nova" endpoints) "/servers")
+         :post token 
+         (st-json:write-json-to-string
+          (alexandria:plist-hash-table
+           (list "server"
+                 (alexandria:plist-hash-table
+                  (list "name" server-name
+                        "imageRef" image-id
+                        "flavorRef" flavor-id))))))
+      (st-json:getjso "id" (st-json:getjso "server" (st-json:read-json response))))))
 
 (defgeneric delete-server (server-id endpoints os-auth-token)
   (:documentation "Deletes a server."))
 
 (defmethod delete-server (server-id endpoints (os-auth-token os-auth-token))
-  (with-api-request response
-      (os-auth-token :delete (format nil "~A~A~A"
-                                     (get-public-url "nova" endpoints) "/servers/" server-id))
-    response))
+  (with-accessors ((token token)) os-auth-token
+    (with-os-response response
+        ((format nil "~A~A~A"
+                 (get-public-url "nova" endpoints) "/servers/" server-id)
+         :delete token nil)
+      response)))
 
 (defgeneric list-floating-ips (endpoints os-auth-token)
   (:documentation "Lists all of the currently allocated floating IPs."))
 
 (defmethod list-floating-ips (endpoints (os-auth-token os-auth-token))
-  (with-api-request response
-      (os-auth-token :get (format nil "~A~A"
-                                  (get-public-url "nova" endpoints) "/os-floating-ips"))
-    (mapcar #'(lambda (jso)
-                (cons (st-json:getjso "ip" jso)
-                      (pairlis (list "fixed-ip" "pool")
-                               (list (st-json:getjso "fixed_ip" jso)
-                                     (st-json:getjso "pool" jso)))))
-            (st-json:getjso "floating_ips" (st-json:read-json response)))))
+  (with-accessors ((token token)) os-auth-token
+    (with-os-response response
+        ((format nil "~A~A"
+                 (get-public-url "nova" endpoints) "/os-floating-ips")
+         :get token nil)
+      (mapcar #'(lambda (jso)
+                  (cons (st-json:getjso "ip" jso)
+                        (pairlis (list "fixed-ip" "pool")
+                                 (list (st-json:getjso "fixed_ip" jso)
+                                       (st-json:getjso "pool" jso)))))
+              (st-json:getjso "floating_ips" (st-json:read-json response))))))
 
 (defgeneric create-floating-ip (endpoints os-auth-token)
   (:documentation "Creates/allocates a new floating IP."))
 
 (defmethod create-floating-ip (endpoints (os-auth-token os-auth-token))
-  (with-api-request response
-      (os-auth-token :post (format nil "~A~A"
-                                   (get-public-url "nova" endpoints) "/os-floating-ips")
-                     (st-json:write-json-to-string
-                      (alexandria:plist-hash-table
-                       (list "pool" "public"))))
-    (st-json:getjso "ip" (st-json:getjso "floating_ip" (st-json:read-json response)))))
+  (with-accessors ((token token)) os-auth-token
+    (with-os-response response
+        ((format nil "~A~A"
+                 (get-public-url "nova" endpoints) "/os-floating-ips")
+         :post token 
+         (st-json:write-json-to-string
+          (alexandria:plist-hash-table
+           (list "pool" "public"))))
+      (st-json:getjso "ip" (st-json:getjso "floating_ip" (st-json:read-json response))))))
 
 (defgeneric associate-floating-ip (server-id floating-ip endpoints os-auth-token)
   (:documentation "Associates a floating IP with an active server."))
 
 (defmethod associate-floating-ip (server-id floating-ip endpoints (os-auth-token os-auth-token))
-  (with-api-request response
-      (os-auth-token :post (format nil "~A~A~A~A"
-                                   (get-public-url "nova" endpoints) "/servers/"
-                                   server-id "/action")
-                     (st-json:write-json-to-string
-                      (alexandria:plist-hash-table
-                       (list "addFloatingIp"
-                             (alexandria:plist-hash-table
-                              (list "address" floating-ip))))))
-    response))
+  (with-accessors ((token token)) os-auth-token
+    (with-os-response response
+        ((format nil "~A~A~A~A"
+                 (get-public-url "nova" endpoints) "/servers/"
+                 server-id "/action")
+         :post token
+         (st-json:write-json-to-string
+          (alexandria:plist-hash-table
+           (list "addFloatingIp"
+                 (alexandria:plist-hash-table
+                  (list "address" floating-ip))))))
+      response)))
 
 (defgeneric list-default-security-group-rules (endpoints os-auth-token)
   (:documentation "Lists all the currently active security rules in the default security group."))
 
 (defmethod list-default-security-group-rules (endpoints (os-auth-token os-auth-token))
-  (with-api-request response
-      (os-auth-token :get (format nil "~A~A"
-                                  (get-public-url "nova" endpoints)
-                                  "/os-security-group-default-rules"))
-    (st-json:read-json response)))
+  (with-accessors ((token token)) os-auth-token
+    (with-os-response response
+        ((format nil "~A~A"
+                 (get-public-url "nova" endpoints)
+                 "/os-security-group-default-rules")
+         :get token nil)
+      (st-json:read-json response))))
 
 (defgeneric create-default-security-group-rule (rule endpoints os-auth-token)
   (:documentation "Creates a new security rule in the default security group."))
 
 (defmethod create-default-security-group-rule (rule endpoints (os-auth-token os-auth-token))
-  (with-api-request response
-      (os-auth-token :post (format nil "~A~A"
-                                   (get-public-url "nova" endpoints)
-                                   "/os-security-group-default-rules")
-                     rule)
-    response))
+  (with-accessors ((token token)) os-auth-token
+    (with-os-response response
+        ((format nil "~A~A"
+                 (get-public-url "nova" endpoints)
+                 "/os-security-group-default-rules")
+         :post token rule)
+      response)))
 
-(defun set-security-rule-accept-all-icmp (endpoints os-auth-token)
+(defun add-security-rule-accept-all-icmp (endpoints os-auth-token)
   "Adds a security rule that accepts all incoming ICMP connection."
   (create-default-security-group-rule (st-json:write-json-to-string
                                        (alexandria:plist-hash-table
@@ -162,7 +181,7 @@ active endpoints."
                                       endpoints
                                       os-auth-token))
 
-(defun set-security-rule-accept-all-tcp (endpoints os-auth-token)
+(defun add-security-rule-accept-all-tcp (endpoints os-auth-token)
   "Adds a security rule that accepts all incoming TCP connection."
   (create-default-security-group-rule (st-json:write-json-to-string
                                        (alexandria:plist-hash-table
@@ -175,7 +194,7 @@ active endpoints."
                                       endpoints
                                       os-auth-token))
 
-(defun set-security-rule-accept-all-udp (endpoints os-auth-token)
+(defun add-security-rule-accept-all-udp (endpoints os-auth-token)
   "Adds a security rule that accepts all incoming UDP connection."
   (create-default-security-group-rule (st-json:write-json-to-string
                                        (alexandria:plist-hash-table
