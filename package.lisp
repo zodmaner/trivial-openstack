@@ -3,7 +3,11 @@
 (defpackage #:trivial-openstack
   (:use #:cl)
   (:export :cdr-assoc
+           :get-public-url
            :authenticate
+           :*endpoints*
+           :*token*
+           :define-global-endpoints-and-token
            :list-images
            :list-flavors
            :list-servers
