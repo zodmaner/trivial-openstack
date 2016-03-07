@@ -2,6 +2,7 @@
 
 (defpackage #:trivial-openstack
   (:use #:cl)
+  (:nicknames #:t-os)
   (:export :cdr-assoc
            :get-public-url
            :authenticate
