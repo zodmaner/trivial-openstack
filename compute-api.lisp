@@ -15,10 +15,10 @@ active endpoints."
 
 ;;; Bindings for OpenStack Nova Compute API are defined here.
 
-(defgeneric list-flavors (endpoints os-auth-token)
-  (:documentation "Lists all of the currently available flavors."))
-
-(defmethod list-flavors (endpoints (os-auth-token os-auth-token))
+(defun list-flavors (&key (endpoints *endpoints*) (os-auth-token *token*))
+  "Lists all of the currently available flavors."
+  (declare (type list endpoints)
+           (type os-auth-token os-auth-token))
   (with-accessors ((token token)) os-auth-token
     (with-os-response response
         ((format nil "~A~A"
@@ -29,10 +29,10 @@ active endpoints."
                         (st-json:getjso "id" jso)))
               (st-json:getjso "flavors" (st-json:read-json response))))))
 
-(defgeneric list-servers (endpoints os-auth-token)
-  (:documentation "Lists all of the currently active servers."))
-
-(defmethod list-servers (endpoints (os-auth-token os-auth-token))
+(defun list-servers (&key (endpoints *endpoints*) (os-auth-token *token*))
+  "Lists all of the currently active servers."
+  (declare (type list endpoints)
+           (type os-auth-token os-auth-token))
   (with-accessors ((token token)) os-auth-token
     (with-os-response response
         ((format nil "~A~A"
@@ -43,10 +43,10 @@ active endpoints."
                         (st-json:getjso "id" jso)))
               (st-json:getjso "servers" (st-json:read-json response))))))
 
-(defgeneric list-servers-detail (endpoints os-auth-token)
-  (:documentation "Lists all of the currently active servers in detail."))
-
-(defmethod list-servers-detail (endpoints (os-auth-token os-auth-token))
+(defun list-servers-detail (&key (endpoints *endpoints*) (os-auth-token *token*))
+  "Lists all of the currently active servers in detail."
+  (declare (type list endpoints)
+           (type os-auth-token os-auth-token))
   (with-accessors ((token token)) os-auth-token
     (with-os-response response
         ((format nil "~A~A"
@@ -68,10 +68,10 @@ active endpoints."
                                             jso)))))))
               (st-json:getjso "servers" (st-json:read-json response))))))
 
-(defgeneric create-server (server-name image-id flavor-id endpoints os-auth-token)
-  (:documentation "Creates a new server."))
-
-(defmethod create-server (server-name image-id flavor-id endpoints (os-auth-token os-auth-token))
+(defun create-server (server-name image-id flavor-id &key (endpoints *endpoints*) (os-auth-token *token*))
+  "Creates a new server."
+  (declare (type list endpoints)
+           (type os-auth-token os-auth-token))
   (with-accessors ((token token)) os-auth-token
     (with-os-response response
         ((format nil "~A~A"
@@ -86,10 +86,10 @@ active endpoints."
                         "flavorRef" flavor-id))))))
       (st-json:getjso "id" (st-json:getjso "server" (st-json:read-json response))))))
 
-(defgeneric delete-server (server-id endpoints os-auth-token)
-  (:documentation "Deletes a server."))
-
-(defmethod delete-server (server-id endpoints (os-auth-token os-auth-token))
+(defun delete-server (server-id &key (endpoints *endpoints*) (os-auth-token *token*))
+  "Deletes a server."
+  (declare (type list endpoints)
+           (type os-auth-token os-auth-token))
   (with-accessors ((token token)) os-auth-token
     (with-os-response response
         ((format nil "~A~A~A"
@@ -97,10 +97,10 @@ active endpoints."
          :delete token nil)
       response)))
 
-(defgeneric list-floating-ips (endpoints os-auth-token)
-  (:documentation "Lists all of the currently allocated floating IPs."))
-
-(defmethod list-floating-ips (endpoints (os-auth-token os-auth-token))
+(defun list-floating-ips (&key (endpoints *endpoints*) (os-auth-token *token*))
+  "Lists all of the currently allocated floating IPs."
+  (declare (type list endpoints)
+           (type os-auth-token os-auth-token))
   (with-accessors ((token token)) os-auth-token
     (with-os-response response
         ((format nil "~A~A"
@@ -113,10 +113,10 @@ active endpoints."
                                        (st-json:getjso "pool" jso)))))
               (st-json:getjso "floating_ips" (st-json:read-json response))))))
 
-(defgeneric create-floating-ip (endpoints os-auth-token)
-  (:documentation "Creates/allocates a new floating IP."))
-
-(defmethod create-floating-ip (endpoints (os-auth-token os-auth-token))
+(defun create-floating-ip (&key (endpoints *endpoints*) (os-auth-token *token*))
+  "Creates/allocates a new floating IP."
+  (declare (type list endpoints)
+           (type os-auth-token os-auth-token))
   (with-accessors ((token token)) os-auth-token
     (with-os-response response
         ((format nil "~A~A"
@@ -127,10 +127,10 @@ active endpoints."
            (list "pool" "public"))))
       (st-json:getjso "ip" (st-json:getjso "floating_ip" (st-json:read-json response))))))
 
-(defgeneric associate-floating-ip (server-id floating-ip endpoints os-auth-token)
-  (:documentation "Associates a floating IP with an active server."))
-
-(defmethod associate-floating-ip (server-id floating-ip endpoints (os-auth-token os-auth-token))
+(defun associate-floating-ip (server-id floating-ip &key (endpoints *endpoints*) (os-auth-token *token*))
+  "Associates a floating IP with an active server."
+  (declare (type list endpoints)
+           (type os-auth-token os-auth-token))
   (with-accessors ((token token)) os-auth-token
     (with-os-response response
         ((format nil "~A~A~A~A"
@@ -144,10 +144,10 @@ active endpoints."
                   (list "address" floating-ip))))))
       response)))
 
-(defgeneric list-default-security-group-rules (endpoints os-auth-token)
-  (:documentation "Lists all the currently active security rules in the default security group."))
-
-(defmethod list-default-security-group-rules (endpoints (os-auth-token os-auth-token))
+(defun list-default-security-group-rules (&key (endpoints *endpoints*) (os-auth-token *token*))
+  "Lists all the currently active security rules in the default security group."
+  (declare (type list endpoints)
+           (type os-auth-token os-auth-token))
   (with-accessors ((token token)) os-auth-token
     (with-os-response response
         ((format nil "~A~A"
@@ -156,10 +156,10 @@ active endpoints."
          :get token nil)
       (st-json:read-json response))))
 
-(defgeneric create-default-security-group-rule (rule endpoints os-auth-token)
-  (:documentation "Creates a new security rule in the default security group."))
-
-(defmethod create-default-security-group-rule (rule endpoints (os-auth-token os-auth-token))
+(defun create-default-security-group-rule (rule &key (endpoints *endpoints*) (os-auth-token *token*))
+  "Creates a new security rule in the default security group."
+  (declare (type list endpoints)
+           (type os-auth-token os-auth-token))
   (with-accessors ((token token)) os-auth-token
     (with-os-response response
         ((format nil "~A~A"
@@ -168,8 +168,10 @@ active endpoints."
          :post token rule)
       response)))
 
-(defun add-security-rule-accept-all-icmp (endpoints os-auth-token)
+(defun add-security-rule-accept-all-icmp (&key (endpoints *endpoints*) (os-auth-token *token*))
   "Adds a security rule that accepts all incoming ICMP connection."
+  (declare (type list endpoints)
+           (type os-auth-token os-auth-token))
   (create-default-security-group-rule (st-json:write-json-to-string
                                        (alexandria:plist-hash-table
                                         (list "security_group_default_rule"
@@ -178,11 +180,13 @@ active endpoints."
                                                      "from_port" "-1"
                                                      "to_port" "-1"
                                                      "cidr" "0.0.0.0/0")))))
-                                      endpoints
-                                      os-auth-token))
+                                      :endpoints endpoints
+                                      :os-auth-token os-auth-token))
 
-(defun add-security-rule-accept-all-tcp (endpoints os-auth-token)
+(defun add-security-rule-accept-all-tcp (&key (endpoints *endpoints*) (os-auth-token *token*))
   "Adds a security rule that accepts all incoming TCP connection."
+  (declare (type list endpoints)
+           (type os-auth-token os-auth-token))
   (create-default-security-group-rule (st-json:write-json-to-string
                                        (alexandria:plist-hash-table
                                         (list "security_group_default_rule"
@@ -191,11 +195,13 @@ active endpoints."
                                                      "from_port" "1"
                                                      "to_port" "65535"
                                                      "cidr" "0.0.0.0/0")))))
-                                      endpoints
-                                      os-auth-token))
+                                      :endpoints endpoints
+                                      :os-auth-token os-auth-token))
 
-(defun add-security-rule-accept-all-udp (endpoints os-auth-token)
+(defun add-security-rule-accept-all-udp (&key (endpoints *endpoints*) (os-auth-token *token*))
   "Adds a security rule that accepts all incoming UDP connection."
+  (declare (type list endpoints)
+           (type os-auth-token os-auth-token))
   (create-default-security-group-rule (st-json:write-json-to-string
                                        (alexandria:plist-hash-table
                                         (list "security_group_default_rule"
@@ -204,5 +210,5 @@ active endpoints."
                                                      "from_port" "1"
                                                      "to_port" "65535"
                                                      "cidr" "0.0.0.0/0")))))
-                                      endpoints
-                                      os-auth-token))
+                                      :endpoints endpoints
+                                      :os-auth-token os-auth-token))

@@ -4,10 +4,10 @@
 
 ;;; Bindings for OpenStack Glance image API are defined here.
 
-(defgeneric list-images (endpoints os-auth-token)
-  (:documentation "Retrieves the list of currently available images."))
-
-(defmethod list-images (endpoints (os-auth-token os-auth-token))
+(defun list-images (&key (endpoints *endpoints*) (os-auth-token *token*))
+  "Retrieves the list of currently available images."
+  (declare (type list endpoints)
+           (type os-auth-token os-auth-token))
   (with-accessors ((token token)) os-auth-token
     (with-os-response response
         ((format nil "~A~A"
