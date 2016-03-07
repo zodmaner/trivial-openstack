@@ -4,6 +4,12 @@
 
 ;;; "trivial-openstack" goes here. Hacks and glory await!
 
+(defvar *endpoints* nil
+  "A global default alist map of active OpenStack service endpoints.")
+
+(defvar *token* nil
+  "A global default authentication token returned by OpenStack Keystone identity service.")
+
 (defmacro with-os-response (stream (uri http-method &optional x-auth-token content) &body body)
   "Sends an API request to an OpenStack endpoint at URI and binds a stream of
 the response body that is returned by an OpenStack service to a user specified
@@ -37,3 +43,10 @@ content with the request."
              (let ((,stream response-body-stream))
                ,@body))
            (error (format nil "Error code ~A, ~A." status-code reason-phase))))))
+
+(defun define-global-endpoints-and-token (keystone-hostname username password &optional tenant-name)
+  "Authenticates a user, retrieves and sets new global default endpoints and authentication token."
+  (multiple-value-bind (endpoints token)
+      (authenticate keystone-hostname username password tenant-name)
+    (setf *endpoints* endpoints)
+    (setf *token* token)))
