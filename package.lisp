@@ -3,16 +3,13 @@
 (defpackage #:trivial-openstack
   (:use #:cl)
   (:nicknames #:t-os)
-  (:export :cdr-assoc
-           :get-public-url
+  (:export :get-public-url
+           :make-connection
            :authenticate
-           :*endpoints*
-           :*token*
-           :define-global-endpoints-and-token
+           :*connection*
            :list-images
            :list-flavors
            :list-servers
-           :list-servers-detail
            :create-server
            :delete-server
            :list-floating-ips
