@@ -2,7 +2,7 @@
 
 (defpackage #:trivial-openstack
   (:use #:cl)
-  (:nicknames #:t-os)
+;;  (:nicknames #:t-os)
   (:export :get-public-url
            :make-connection
            :authenticate
