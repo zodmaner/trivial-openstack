@@ -43,4 +43,4 @@ argument can be used to send any content with the request."
 
 (defun authenticate (keystone-hostname username password &optional tenant-name)
   "Authenticates a user, and initializes the default global connection object."
-  (setf *connection* (authenticate keystone-hostname username password tenant-name)))
+  (setf *connection* (make-connection keystone-hostname username password tenant-name)))
