@@ -29,7 +29,7 @@
 currently active endpoints."
   (alexandria:assoc-value
    (alexandria:assoc-value
-    (alexandria:assoc-value service endpoints :test #'string=)
+    (alexandria:assoc-value endpoints service :test #'string=)
     "endpoints" :test #'string=)
    "public-url" :test #'string=))
 
