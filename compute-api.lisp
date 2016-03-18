@@ -17,6 +17,23 @@
                         (st-json:getjso "id" jso)))
               (st-json:getjso "flavors" (st-json:read-json response))))))
 
+(defun list-flavor-details (flavor-id &key (conn *connection*))
+  "List details of a flavor."
+  (declare (type connection conn)
+           (type string flavor-id))
+  (with-accessors ((endpoints service-endpoints) (token token)) conn
+    (with-os-response response
+        ((format nil "~A~A~A"
+                 (get-public-url "nova" endpoints) "/flavors/" flavor-id)
+         :get token nil)
+      (let ((flavor-jso (st-json:getjso "flavor" (st-json:read-json response))))
+        (pairlis (list "name" "vcpus" "ram" "swap" "disk")
+                 (list (st-json:getjso "name" flavor-jso)
+                       (st-json:getjso "vcpus" flavor-jso)
+                       (st-json:getjso "ram" flavor-jso)
+                       (st-json:getjso "swap" flavor-jso)
+                       (st-json:getjso "disk" flavor-jso)))))))
+
 (defun list-servers (&key detail (conn *connection*))
   "Lists all of the currently active servers."
   (declare (type connection conn)
