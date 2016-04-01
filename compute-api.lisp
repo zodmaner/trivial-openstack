@@ -5,16 +5,16 @@
 ;;; Bindings for OpenStack Nova Compute API are defined here.
 
 (def-openstack-api list-flavors ()
-    "Lists all of the currently available flavors."
     (response :get ((get-public-url "nova") "/flavors"))
+  "Lists all of the currently available flavors."
   (mapcar #'(lambda (jso)
               (cons (st-json:getjso "name" jso)
                     (st-json:getjso "id" jso)))
           (st-json:getjso "flavors" (st-json:read-json response))))
 
 (def-openstack-api list-flavor-details (flavor-id)
-    "List a flavor details."
     (response :get ((get-public-url "nova") "/flavors/" flavor-id))
+  "List a flavor details."
   (let ((flavor-jso (st-json:getjso "flavor" (st-json:read-json response))))
     (pairlis (list "name" "vcpus" "ram" "swap" "disk")
              (list (st-json:getjso "name" flavor-jso)
@@ -24,16 +24,16 @@
                    (st-json:getjso "disk" flavor-jso)))))
 
 (def-openstack-api list-servers ()
-    "Lists all of the currently active servers."
     (response :get ((get-public-url "nova") "/servers"))
+  "Lists all of the currently active servers."
   (mapcar #'(lambda (jso)
               (cons (st-json:getjso "name" jso)
                     (st-json:getjso "id" jso)))
           (st-json:getjso "servers" (st-json:read-json response))))
 
 (def-openstack-api list-servers-details ()
-    "Lists all of the currently active servers in details."
     (response :get ((get-public-url "nova") "/servers/detail"))
+  "Lists all of the currently active servers in details."
   (mapcar #'(lambda (jso)
               (cons (st-json:getjso "name" jso)
                     (pairlis (list "id" "status" "addresses")
@@ -51,7 +51,6 @@
           (st-json:getjso "servers" (st-json:read-json response))))
 
 (def-openstack-api create-server (server-name image-id flavor-id)
-    "Creates a new server."
     (response :post ((get-public-url "nova") "/servers")
               (st-json:write-json-to-string
                (alexandria:plist-hash-table
@@ -60,16 +59,17 @@
                        (list "name" server-name
                              "imageRef" image-id
                              "flavorRef" flavor-id))))))
+  "Creates a new server."
   (st-json:getjso "id" (st-json:getjso "server" (st-json:read-json response))))
 
 (def-openstack-api delete-server (server-id)
-    "Deletes a server."
     (response :delete ((get-public-url "nova") "/servers/" server-id))
+  "Deletes a server."
   response)
 
 (def-openstack-api list-floating-ips ()
-    "Lists all of the currently allocated floating IPs."
     (response :get ((get-public-url "nova") "/os-floating-ips"))
+  "Lists all of the currently allocated floating IPs."
   (mapcar #'(lambda (jso)
               (cons (st-json:getjso "ip" jso)
                     (pairlis (list "fixed-ip" "pool")
@@ -78,32 +78,32 @@
           (st-json:getjso "floating_ips" (st-json:read-json response))))
 
 (def-openstack-api create-floating-ip (&key (pool "public"))
-    "Creates/allocates a new floating IP."
     (response :post ((get-public-url "nova") "/os-floating-ips")
               (st-json:write-json-to-string
                (alexandria:plist-hash-table
                 (list "pool" pool))))
+  "Creates/allocates a new floating IP."
   (st-json:getjso "ip" (st-json:getjso "floating_ip" (st-json:read-json response))))
 
 (def-openstack-api associate-floating-ip (server-id floating-ip)
-    "Associates a floating IP with an active server."
     (response :post ((get-public-url "nova") "/servers/" server-id "/action")
               (st-json:write-json-to-string
                (alexandria:plist-hash-table
                 (list "addFloatingIp"
                       (alexandria:plist-hash-table
                        (list "address" floating-ip))))))
+  "Associates a floating IP with an active server."
   response)
 
 (def-openstack-api list-default-security-group-rules ()
-    "Lists all the currently active security rules in the default security group."
     (response :get ((get-public-url "nova") "/os-security-group-default-rules"))
+  "Lists all the currently active security rules in the default security group."
   (st-json:read-json response))
 
 (def-openstack-api create-default-security-group-rule (rule)
-    "Creates a new security rule in the default security group."
     (response :post ((get-public-url "nova") "/os-security-group-default-rules")
               rule)
+  "Creates a new security rule in the default security group."
   response)
 
 (defun add-security-rule-accept-all-icmp ()

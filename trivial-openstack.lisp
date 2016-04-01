@@ -39,15 +39,22 @@ argument can be used to send any content with the request."
                ,@body))
            (error (format nil "Error code ~A, ~A." status-code reason-phase))))))
 
-(defmacro def-openstack-api (name lambda-list documentation
+(defmacro def-openstack-api (name lambda-list
                              (stream http-method uri-list &optional json auth-token)
                              &body body)
   "Defines a new OpenStack REST API binding."
-  `(defun ,name ,lambda-list
-     ,(when (and documentation (stringp documentation))
-            documentation)
-     (with-accessors ((token token)) ,(if auth-token
-                                          auth-token
-                                          '*openstack-token*)
-       (with-openstack-response ,stream ((apply #'join-strings ,@uri-list '()) ,http-method token ,json)
-         ,@body))))
+  (let* ((token-sym (gensym "OS-"))
+         (body-car (car body))
+         (doc-string (when (stringp body-car)
+                       body-car))
+         (forms (if doc-string
+                    (cdr body)
+                    body)))
+    `(defun ,name ,lambda-list
+       ,doc-string
+       (with-accessors ((,token-sym token)) ,(if auth-token
+                                                 auth-token
+                                                 '*openstack-token*)
+         (with-openstack-response ,stream ((apply #'join-strings ,@uri-list '())
+                                           ,http-method ,token-sym ,json)
+           ,@forms)))))
