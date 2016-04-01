@@ -103,7 +103,7 @@ reacquire the token once it expires.
 Only requires an instant of user credential payload, other slots will
 be initialized when we instantiate the object."))
 
-(defmethod initialize-instance :after ((token openstack-token) &key)
+(defmethod initialize-instance :after ((os-token openstack-token) &key)
   "Uses an instant of user credential payload to authenticate and
 retrieve a token and its expiration time, then stores them into their
 respective slots.
@@ -112,7 +112,7 @@ Also retrieves currently active service catalog endpoints, parses them
 into an alist map, and binds the alist map to the global special
 variable."
   (with-accessors ((os-c credential) (token token)
-                   (token-expiration-time token-expiration-time)) token
+                   (token-expiration-time token-expiration-time)) os-token
     (with-keystone-response response (os-c)
       (let* ((access-jso (st-json:getjso "access" (st-json:read-json response)))
              (token-jso (st-json:getjso "token" access-jso))
@@ -122,12 +122,12 @@ variable."
               (local-time:parse-timestring (st-json:getjso "expires" token-jso)))
         (setf *service-catalog* (parse-endpoints service-catalog-jso))))))
 
-(defmethod token :before ((token openstack-token))
+(defmethod token :before ((os-token openstack-token))
   "Before reading a value of the token's slot, check if it has already
 expired. If it does, then uses the credential payload to
 re-authenticate and reacquire the token."
   (with-accessors ((os-c credential) (token token)
-                   (token-expiration-time token-expiration-time)) token
+                   (token-expiration-time token-expiration-time)) os-token
     (when (local-time:timestamp>= (local-time:now) token-expiration-time)
       (with-keystone-response response (os-c)
         (let ((token-jso (st-json:getjso
