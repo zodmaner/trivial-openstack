@@ -8,6 +8,9 @@
   "An alist map of service catalog endpoints, the value of which will
   be set when the OpenStack token object is initialized.")
 
+(defvar *openstack-token* nil
+  "The default global OpenStack token object.")
+
 (defun get-public-url (service &key (endpoints *service-catalog*))
   "Retrieves a public URL of an OpenStack service endpoint from an
 alist map of currently active endpoints."
@@ -16,9 +19,6 @@ alist map of currently active endpoints."
     (alexandria:assoc-value endpoints service :test #'string=)
     "endpoints" :test #'string=)
    "public-url" :test #'string=))
-
-(defvar *openstack-token* nil
-  "The default global OpenStack token object.")
 
 (defun parse-endpoints (service-catalog-jso)
   "Parses a JSON containing currently active service endpoints into an
