@@ -12,8 +12,9 @@
   "The default global OpenStack token object.")
 
 (defun get-public-url (service &key (endpoints *service-catalog*))
-  "Retrieves a public URL of an OpenStack service endpoint from an
-alist map of currently active endpoints."
+  "Retrieves a public URL of an OpenStack service endpoint either from
+the default alist map of currently active endpoints or a user-defined
+one."
   (alexandria:assoc-value
    (alexandria:assoc-value
     (alexandria:assoc-value endpoints service :test #'string=)
