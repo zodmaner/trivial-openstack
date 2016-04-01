@@ -4,10 +4,8 @@
 
 ;;; "trivial-openstack" goes here. Hacks and glory await!
 
-(defvar *connection*
-  "A global connection object.")
-
-(defmacro with-os-response (stream (uri http-method &optional x-auth-token content) &body body)
+(defmacro with-openstack-response (stream (uri http-method &optional x-auth-token content)
+                                   &body body)
   "Sends an API request to an OpenStack endpoint at URI and binds a
 stream of the response body that is returned by an OpenStack service
 to a user specified stream symbol.
@@ -41,6 +39,15 @@ argument can be used to send any content with the request."
                ,@body))
            (error (format nil "Error code ~A, ~A." status-code reason-phase))))))
 
-(defun authenticate (keystone-hostname username password &optional tenant-name)
-  "Authenticates a user, and initializes the default global connection object."
-  (setf *connection* (make-connection keystone-hostname username password tenant-name)))
+(defmacro def-openstack-api (name lambda-list documentation
+                             (stream http-method uri-list &optional json auth-token)
+                             &body body)
+  "Defines a new OpenStack REST API binding."
+  `(defun ,name ,lambda-list
+     ,(when (and documentation (stringp documentation))
+            documentation)
+     (with-accessors ((token token)) ,(if auth-token
+                                          auth-token
+                                          '*openstack-token*)
+       (with-openstack-response ,stream ((apply #'join-strings ,@uri-list '()) ,http-method token ,json)
+         ,@body))))
