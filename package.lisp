@@ -2,14 +2,20 @@
 
 (defpackage #:trivial-openstack
   (:use #:cl)
-;;  (:nicknames #:t-os)
-  (:export :get-public-url
-           :make-connection
+  (:export :with-openstack-response
+           :def-openstack-api
+           ;; Keystone API bindings
+           :*service-catalog*
+           :get-public-url
+           :*openstack-token*
            :authenticate
-           :*connection*
+           ;; Glance API bindings
            :list-images
+           ;; Nova API bindings
            :list-flavors
+           :list-flavors-details
            :list-servers
+           :list-servers-details
            :create-server
            :delete-server
            :list-floating-ips
