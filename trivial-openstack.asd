@@ -10,7 +10,6 @@
                #:alexandria)
   :serial t
   :components ((:file "package")
-               (:file "utility")
                (:file "trivial-openstack")
                (:file "identity-api")
                (:file "image-api")

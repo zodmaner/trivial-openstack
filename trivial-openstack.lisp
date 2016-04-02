@@ -4,6 +4,12 @@
 
 ;;; "trivial-openstack" goes here. Hacks and glory await!
 
+(defun join-strings (&rest strings)
+  "Joins strings."
+  (with-output-to-string (out)
+    (loop :for element :in strings :do
+       (princ element out))))
+
 (defmacro with-openstack-response (stream (uri http-method &optional x-auth-token content)
                                    &body body)
   "Sends an API request to an OpenStack endpoint at URI and binds a
