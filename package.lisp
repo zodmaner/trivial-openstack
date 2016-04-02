@@ -13,7 +13,7 @@
            :list-images
            ;; Nova API bindings
            :list-flavors
-           :list-flavors-details
+           :list-flavor-details
            :list-servers
            :list-servers-details
            :create-server
