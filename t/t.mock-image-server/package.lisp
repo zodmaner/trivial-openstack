@@ -2,5 +2,8 @@
 
 (defpackage #:t.mock-image-server
   (:use #:cl)
+  (:import-from #:t.mock-identity-server
+                #:*tenant-id*
+                #:*token*)
   (:export #:start-mock-image-server
            #:stop-mock-image-server))

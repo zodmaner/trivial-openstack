@@ -7,13 +7,6 @@
 (defconstant +default-port+ 9292
   "Default port for the test server.")
 
-(defvar *tenant-id* t.mock-identity-server:*tenant-id*
-  "A dummy tenant ID (same as the one used in the mock identity
-  server.")
-
-(defvar *token* t.mock-identity-server:*token*
-  "A dummy token (same as the one used in the mock identity server.")
-
 (defun start-mock-image-server (&key (port +default-port+))
   "Starts the server by starting the easy-acceptor and returns a stop-server
 closure function that can be used to stop the active acceptor and shutdown
