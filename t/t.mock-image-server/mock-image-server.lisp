@@ -31,23 +31,11 @@ and shutdown the server."
          (list "images"
                (list
                 (alexandria:plist-hash-table
-                 (list "name" "m1.tiny"
-                       "id" "1"))
+                 (list "name" "cirros-0.3.4-x86_64-uec"
+                       "id" "c4947a88-3b38-44d5-b605-edad3cf1191b"))
                 (alexandria:plist-hash-table
-                 (list "name" "m1.small"
-                       "id" "2"))
+                 (list "name" "cirros-0.3.4-x86_64-uec-ramdisk"
+                       "id" "619726e7-b3b1-4d39-8669-cf05fb04981d"))
                 (alexandria:plist-hash-table
-                 (list "name" "m1.medium"
-                       "id" "3"))
-                (alexandria:plist-hash-table
-                 (list "name" "m1.large"
-                       "id" "4"))
-                (alexandria:plist-hash-table
-                 (list "name" "m1.nano"
-                       "id" "42"))
-                (alexandria:plist-hash-table
-                 (list "name" "m1.xlarge"
-                       "id" "5"))
-                (alexandria:plist-hash-table
-                 (list "name" "m1.micro"
-                       "id" "84"))))))))))
+                 (list "name" "cirros-0.3.4-x86_64-uec-kernel"
+                       "id" "b5afe28f-3ed5-4d4e-8094-fac19d2d7ac3"))))))))))
