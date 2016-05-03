@@ -18,5 +18,10 @@
                                   :components
                                   ((:file "package")
                                    (:file "mock-identity-server")))
+                         (:module "t.mock-image-server"
+                                  :serial t
+                                  :components
+                                  ((:file "package")
+                                   (:file "mock-image-server")))
                          (:file "package")
                          (:file "trivial-openstack-test")))))

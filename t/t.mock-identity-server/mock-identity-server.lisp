@@ -23,10 +23,8 @@
 closure function that can be used to stop the active acceptor and shutdown
 the server."
   (let ((identity-acceptor (hunchentoot:start
-                          (make-instance 'hunchentoot:easy-acceptor
-                                         :port port
-                                         :document-root (merge-pathnames
-                                                         "static")))))
+                            (make-instance 'hunchentoot:easy-acceptor
+                                           :port port))))
     (defun stop-mock-identity-server ()
       "A closure function that closes over an active acceptor started by
 the start-server function and can be used to stop the said active acceptor

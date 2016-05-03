@@ -2,7 +2,9 @@
 
 (defpackage #:t.mock-identity-server
   (:use #:cl)
-  (:export #:start-mock-identity-server
+  (:export #:*tenant-id*
+           #:*token*
+           #:start-mock-identity-server
            #:stop-mock-identity-server))
 
 (uri-template:enable-uri-template-syntax)
