@@ -39,7 +39,9 @@ and shutdown the server."
   "A mock OpenStack Keystone (identity) endpoint."
   (case (hunchentoot:request-method*)
     (:post
-     (let* ((request-jso (st-json:read-json-from-string (flexi-streams:octets-to-string (hunchentoot:raw-post-data))))
+     (let* ((request-jso (st-json:read-json-from-string
+                          (flexi-streams:octets-to-string
+                           (hunchentoot:raw-post-data))))
             (auth-jso (st-json:getjso "auth" request-jso))
             (tenant-name (st-json:getjso "tenantName" auth-jso))
             (pwd-creds-jso (st-json:getjso "passwordCredentials" auth-jso))
