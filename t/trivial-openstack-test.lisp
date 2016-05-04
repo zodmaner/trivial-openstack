@@ -4,10 +4,10 @@
 
 ;;; trivial-openstack-test goes here.
 
-(def-suite openstack-identity-test-suite
-    :description "OpenStack Keystone (identity) test suite.")
+(def-suite openstack-test-suite
+    :description "OpenStack test suite.")
 
-(in-suite openstack-identity-test-suite)
+(in-suite openstack-test-suite)
 
 (def-fixture mock-identity-server ()
   (unwind-protect
