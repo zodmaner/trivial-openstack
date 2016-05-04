@@ -16,6 +16,20 @@
          (&body))
     (stop-mock-identity-server)))
 
+(def-fixture mock-image-server ()
+  (unwind-protect
+       (progn
+         (start-mock-image-server)
+         (&body))
+    (stop-mock-image-server)))
+
+(def-fixture mock-compute-server ()
+  (unwind-protect
+       (progn
+         (start-mock-compute-server)
+         (&body))
+    (stop-mock-compute-server)))
+
 (test authentication
   "Test the authentication functionality."
   (with-fixture mock-identity-server ()
