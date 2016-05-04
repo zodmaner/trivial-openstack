@@ -50,3 +50,24 @@ acceptor and shutdown the server."
                 (alexandria:plist-hash-table
                  (list "name" "m1.micro"
                        "id" "84"))))))))))
+
+(hunchentoot:define-easy-handler
+    (nova-endpoint-flavor-details
+     :uri #'(lambda (request)
+              (uri-template:uri-template-bind
+                  (#U/v2.1/{tenant-id}/flavors/{id})
+                  (hunchentoot:request-uri request)
+                (and (string= tenant-id *tenant-id*)
+                     (string= id "1"))))) ()
+  (case (hunchentoot:request-method*)
+    (:get
+     (when (string= *token* (hunchentoot:header-in* "X-Auth-Token"))
+       (st-json:write-json-to-string
+        (alexandria:plist-hash-table
+         (list "flavor"
+               (alexandria:plist-hash-table
+                (list "name" "m1.tiny"
+                      "vcpus" 1
+                      "ram" 512
+                      "swap" ""
+                      "disk" 1)))))))))
