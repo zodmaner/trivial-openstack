@@ -5,6 +5,7 @@
   :author "Smith Dhumbumroong <zodmaner@gmail.com>"
   :license "MIT"
   :depends-on (#:trivial-openstack
+               #:fiveam
                #:st-json
                #:uri-template
                #:local-time
@@ -23,5 +24,10 @@
                                   :components
                                   ((:file "package")
                                    (:file "mock-image-server")))
+                         (:module "t.mock-compute-server"
+                                  :serial t
+                                  :components
+                                  ((:file "package")
+                                   (:file "mock-compute-server")))
                          (:file "package")
                          (:file "trivial-openstack-test")))))

@@ -8,6 +8,8 @@
            :*service-catalog*
            :get-public-url
            :*openstack-token*
+           :token
+           :token-expiration-time
            :authenticate
            ;; Glance API bindings
            :list-images
