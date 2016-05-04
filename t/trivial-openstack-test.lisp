@@ -13,6 +13,10 @@
   (unwind-protect
        (progn
          (start-mock-identity-server)
+         (when (and (not (null *token*))
+                    (not (null *service-catalog*)))
+           (setf *token* nil)
+           (setf *service-catalog* nil))
          (&body))
     (stop-mock-identity-server)))
 
