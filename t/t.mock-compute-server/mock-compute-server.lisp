@@ -117,7 +117,7 @@ acceptor and shutdown the server."
                  (list "name" "test-00"
                        "id" "0a427e44-8d69-4b02-a747-0eb731ba02ad"
                        "status" "ACTIVE"
-                       "addresses"                      
+                       "addresses"
                        (alexandria:plist-hash-table
                         (list "private"
                               (list
