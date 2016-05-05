@@ -95,4 +95,6 @@
     (is (string= (create-floating-ip)
                  "192.168.1.225"))
     (is (equalp (list-floating-ips)
-                '(("192.168.1.225" ("pool" . "public") ("fixed-ip" . :NULL)))))))
+                '(("192.168.1.225" ("pool" . "public") ("fixed-ip" . :NULL)))))
+    (is-false (associate-floating-ip "0a427e44-8d69-4b02-a747-0eb731ba02ad"
+                                     "192.168.1.225"))))

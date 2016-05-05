@@ -136,7 +136,8 @@ acceptor and shutdown the server."
   "An endpoint for deleting a server API."
   (case (hunchentoot:request-method*)
     (:delete
-     (when (string= *token* (hunchentoot:header-in* "X-Auth-Token"))))))
+     (when (not (string= *token* (hunchentoot:header-in* "X-Auth-Token")))
+       "Fail!"))))
 
 (hunchentoot:define-easy-handler
     (nova-endpoint-floating-ip :uri #U/v2.1/{*tenant-id*}/os-floating-ips) ()
@@ -162,5 +163,24 @@ acceptor and shutdown the server."
                (list
                 (alexandria:plist-hash-table
                  (list "ip" "192.168.1.225"
-                       "fixed-ip" :null
+                       "fixed_ip" :null
                        "pool" "public"))))))))))
+
+(hunchentoot:define-easy-handler
+    (nova-endpoint-associate-floating-ip-api
+     :uri #'(lambda (request)
+              (uri-template:uri-template-bind
+                  (#U/v2.1/{tenant-id}/servers/{server-id}/action)
+                  (hunchentoot:request-uri request)
+                (and (string= tenant-id *tenant-id*)
+                     (string= server-id "0a427e44-8d69-4b02-a747-0eb731ba02ad"))))) ()
+  "An endpoint for server action API."
+  (case (hunchentoot:request-method*)
+    (:post
+     (when (string= *token* (hunchentoot:header-in* "X-Auth-Token"))
+       (let* ((request-jso (st-json:read-json-from-string
+                            (flexi-streams:octets-to-string
+                             (hunchentoot:raw-post-data))))
+              (floating-ip (st-json:getjso* "addFloatingIp.address" request-jso)))
+         (when (not (string= "192.168.1.225" floating-ip))
+           "Fail!"))))))
