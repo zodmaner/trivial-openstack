@@ -32,6 +32,13 @@ TRIVIAL-OPENSTACK>
 
 Expect full documentation in the near future.
 
+## Dependencies
+
+* **drakma**
+* **st-json**
+* **local-time**
+* **alexandria**
+
 ## License
 
 Copyright (c) 2016 Smith Dhumbumroong
