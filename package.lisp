@@ -2,7 +2,8 @@
 
 (defpackage #:trivial-openstack
   (:use #:cl)
-  (:export :with-openstack-response
+  (:export :get-value
+           :with-openstack-response
            :def-openstack-api
            ;; Keystone API bindings
            :*service-catalog*

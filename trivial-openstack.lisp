@@ -10,6 +10,10 @@
     (loop :for element :in strings :do
        (princ element out))))
 
+(defun get-value (alist key)
+  "Retrieves the value of the key in the alist map."
+  (alexandria:assoc-value alist key :test #'string=))
+
 (defmacro with-openstack-response (stream (uri http-method &optional x-auth-token content)
                                    &body body)
   "Sends an API request to an OpenStack endpoint at URI and binds a
