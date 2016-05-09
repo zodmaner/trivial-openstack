@@ -15,13 +15,13 @@
 (def-openstack-api list-flavor-details (flavor-id)
     (response :get ((get-public-url "nova") "/flavors/" flavor-id))
   "List a flavor details."
-  (let ((flavor-jso (st-json:getjso "flavor" (st-json:read-json response))))
+  (let ((jso (st-json:read-json response)))
     (pairlis (list "name" "vcpus" "ram" "swap" "disk")
-             (list (st-json:getjso "name" flavor-jso)
-                   (st-json:getjso "vcpus" flavor-jso)
-                   (st-json:getjso "ram" flavor-jso)
-                   (st-json:getjso "swap" flavor-jso)
-                   (st-json:getjso "disk" flavor-jso)))))
+             (list (st-json:getjso* "flavor.name" jso)
+                   (st-json:getjso* "flavor.vcpus" jso)
+                   (st-json:getjso* "flavor.ram" jso)
+                   (st-json:getjso* "flavor.swap" jso)
+                   (st-json:getjso* "flavor.disk" jso)))))
 
 (def-openstack-api list-servers ()
     (response :get ((get-public-url "nova") "/servers"))
@@ -43,11 +43,7 @@
                               (mapcar #'(lambda (jso)
                                           (cons (st-json:getjso "OS-EXT-IPS:type" jso)
                                                 (st-json:getjso "addr" jso)))
-                                      (st-json:getjso
-                                       "private"
-                                       (st-json:getjso
-                                        "addresses"
-                                        jso)))))))
+                                      (st-json:getjso* "addresses.private" jso))))))
           (st-json:getjso "servers" (st-json:read-json response))))
 
 (def-openstack-api create-server (server-name image-id flavor-id)
@@ -60,7 +56,7 @@
                              "imageRef" image-id
                              "flavorRef" flavor-id))))))
   "Creates a new server."
-  (st-json:getjso "id" (st-json:getjso "server" (st-json:read-json response))))
+  (st-json:getjso* "server.id" (st-json:read-json response)))
 
 (def-openstack-api delete-server (server-id)
     (response :delete ((get-public-url "nova") "/servers/" server-id))
@@ -83,7 +79,7 @@
                (alexandria:plist-hash-table
                 (list "pool" pool))))
   "Creates/allocates a new floating IP."
-  (st-json:getjso "ip" (st-json:getjso "floating_ip" (st-json:read-json response))))
+  (st-json:getjso* "floating_ip.ip" (st-json:read-json response)))
 
 (def-openstack-api associate-floating-ip (server-id floating-ip)
     (response :post ((get-public-url "nova") "/servers/" server-id "/action")
