@@ -15,11 +15,7 @@
   "Retrieves a public URL of an OpenStack service endpoint either from
 the default alist map of currently active endpoints or a user-defined
 one."
-  (alexandria:assoc-value
-   (alexandria:assoc-value
-    (alexandria:assoc-value endpoints service :test #'string=)
-    "endpoints" :test #'string=)
-   "public-url" :test #'string=))
+  (get-value endpoints service "endpoints" "public-url"))
 
 (defun parse-endpoints (service-catalog-jso)
   "Parses a JSON containing currently active service endpoints into an
