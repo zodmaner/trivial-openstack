@@ -10,23 +10,19 @@
     (loop :for element :in strings :do
        (princ element out))))
 
-(defun get-value (keys alist)
+(defun get-value (alist &rest keys)
   "Retrieves the value of a given key in an alist.
 
-If there are multiple keys \(each separated by a dot, e.g.,
-\"foo.bar.baz\"\) being supplied, then the function will recursively
-descend into the nested alist and retrieve the value of the last (or
-the rightmost) key.
+If multiple keys are supplied, then get-value will recursively descend
+into the nested alist and retrieve the value of the last (or the
+rightmost) key.
 
-Note that using the multiple keys format only makes sense when the
-alist has other alists nested inside."
-  (let ((index (position #\. keys)))
-    (if index
-        (let* ((key (subseq keys 0 index))
-               (other-keys (subseq keys (1+ index)))
-               (new-alist (alexandria:assoc-value alist key :test #'string=)))
-          (get-value other-keys new-alist))
-        (alexandria:assoc-value alist keys :test #'string=))))
+Note that supplying multiple keys only makes sense when the alist has
+other alists nested inside."
+  (if (cdr keys)
+      (let ((new-alist (alexandria:assoc-value alist (car keys) :test #'string=)))
+        (apply #'get-value new-alist (cdr keys)))
+      (alexandria:assoc-value alist (car keys) :test #'string=)))
 
 (defmacro with-openstack-response (stream (uri http-method &optional x-auth-token content)
                                    &body body)
