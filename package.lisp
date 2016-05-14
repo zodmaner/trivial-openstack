@@ -5,16 +5,16 @@
   (:export #:get-value
            #:with-openstack-response
            #:def-openstack-api
-           #;; Keystone API bindings
+           ;; Keystone API bindings
            #:*service-catalog*
            #:get-public-url
            #:*openstack-token*
            #:token
            #:token-expiration-time
            #:authenticate
-           #;; Glance API bindings
+           ;; Glance API bindings
            #:list-images
-           #;; Nova API bindings
+           ;; Nova API bindings
            #:list-flavors
            #:list-flavor-details
            #:list-servers
