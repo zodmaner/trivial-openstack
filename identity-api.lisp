@@ -85,12 +85,12 @@ to username if not provided."))
    (token-expiration-time :accessor token-expiration-time)
    (service-catalog :accessor service-catalog))
   (:documentation "An OpenStack Keystone object containing an
-authentication token along with all the necessary information to
+authentication token, along with all the necessary information to
 reacquire the token once it expires, and an alist map of service
 catalog endpoints.
 
-Only requires an instant of user credential payload, other slots will
-be initialized when we instantiate the object."))
+Only requires an instant of user credential payload to instantiate,
+other slots will be initialized when we instantiate the object."))
 
 (defmethod initialize-instance :after ((os-keystone openstack-keystone) &key)
   "Uses an instant of user credential payload to authenticate and
