@@ -4,18 +4,8 @@
 
 ;;; Bindings for OpenStack Keystone identity API are defined here
 
-(defvar *service-catalog* nil
-  "An alist map of service catalog endpoints, the value of which will
-  be set when the OpenStack token object is initialized.")
-
-(defvar *openstack-token* nil
-  "The default global OpenStack token object.")
-
-(defun get-public-url (service &key (endpoints *service-catalog*))
-  "Retrieves a public URL of an OpenStack service endpoint either from
-the default alist map of currently active endpoints or a user-defined
-one."
-  (get-value endpoints service "endpoints" "public-url"))
+(defvar *openstack-keystone* nil
+  "The default global OpenStack Keystone object.")
 
 (defun parse-endpoints (service-catalog-jso)
   "Parses a JSON containing currently active service endpoints into an
@@ -86,30 +76,32 @@ to username if not provided."))
                  :password password
                  :tenant-name tenant-name))
 
-;;; OpenStack authentication token object
+;;; OpenStack Keystone object
 
-(defclass openstack-token ()
+(defclass openstack-keystone ()
   ((credential :initarg :credential
                :reader credential)
    (token :accessor token)
-   (token-expiration-time :accessor token-expiration-time))
-  (:documentation "An OpenStack token object containing an
+   (token-expiration-time :accessor token-expiration-time)
+   (service-catalog :accessor service-catalog))
+  (:documentation "An OpenStack Keystone object containing an
 authentication token along with all the necessary information to
-reacquire the token once it expires.
+reacquire the token once it expires, and an alist map of service
+catalog endpoints.
 
 Only requires an instant of user credential payload, other slots will
 be initialized when we instantiate the object."))
 
-(defmethod initialize-instance :after ((os-token openstack-token) &key)
+(defmethod initialize-instance :after ((os-keystone openstack-keystone) &key)
   "Uses an instant of user credential payload to authenticate and
-retrieve a token and its expiration time, then stores them into their
-respective slots.
+retrieve a token, along with its expiration time, then stores them
+into their respective slots.
 
 Also retrieves currently active service catalog endpoints, parses them
-into an alist map, and binds the alist map to the global special
-variable."
+into an alist map, and stores them into their slot."
   (with-accessors ((os-c credential) (token token)
-                   (token-expiration-time token-expiration-time)) os-token
+                   (token-expiration-time token-expiration-time)
+                   (service-catalog service-catalog)) os-keystone
     (with-keystone-response response (os-c)
       (let* ((access-jso (st-json:getjso "access" (st-json:read-json response)))
              (token-jso (st-json:getjso "token" access-jso))
@@ -117,14 +109,14 @@ variable."
         (setf token (st-json:getjso "id" token-jso))
         (setf token-expiration-time
               (local-time:parse-timestring (st-json:getjso "expires" token-jso)))
-        (setf *service-catalog* (parse-endpoints service-catalog-jso))))))
+        (setf service-catalog (parse-endpoints service-catalog-jso))))))
 
-(defmethod token :before ((os-token openstack-token))
+(defmethod token :before ((os-keystone openstack-keystone))
   "Before reading a value of the token's slot, check if it has already
 expired. If it does, then uses the credential payload to
 re-authenticate and reacquire the token."
   (with-accessors ((os-c credential) (token token)
-                   (token-expiration-time token-expiration-time)) os-token
+                   (token-expiration-time token-expiration-time)) os-keystone
     (when (local-time:timestamp>= (local-time:now) token-expiration-time)
       (with-keystone-response response (os-c)
         (let ((token-jso (st-json:getjso
@@ -137,16 +129,22 @@ re-authenticate and reacquire the token."
           (setf token-expiration-time
                 (local-time:parse-timestring (st-json:getjso "expires" token-jso))))))))
 
-(defun make-openstack-token (keystone-hostname username password &optional tenant-name)
-  "Creates and returns a new instant of the OpenStack token object."
+(defun make-openstack-keystone (keystone-hostname username password &optional tenant-name)
+  "Creates and returns a new instant of the OpenStack Keystone object."
   (let ((os-c (make-openstack-credential keystone-hostname
                                          username
                                          password
                                          tenant-name)))
-    (make-instance 'openstack-token :credential os-c)))
+    (make-instance 'openstack-keystone :credential os-c)))
 
 (defun authenticate (keystone-hostname username password &optional tenant-name)
-  "Authenticates a user, and initializes the default global special
+  "Authenticates a user, and initializes the default global Keystone special
 variables."
-  (setf *openstack-token*
-        (make-openstack-token keystone-hostname username password tenant-name)))
+  (setf *openstack-keystone*
+        (make-openstack-keystone keystone-hostname username password tenant-name)))
+
+(defun get-public-url (service &key (endpoints-map (service-catalog *openstack-keystone*)))
+  "Retrieves a public URL of an OpenStack service endpoint either from
+the default alist map of currently active endpoints or a user-defined
+one."
+  (get-value endpoints-map service "endpoints" "public-url"))

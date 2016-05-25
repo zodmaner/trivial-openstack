@@ -6,12 +6,12 @@
            #:with-openstack-response
            #:def-openstack-api
            ;; Keystone API bindings
-           #:*service-catalog*
-           #:get-public-url
-           #:*openstack-token*
+           #:*openstack-keystone*
            #:token
            #:token-expiration-time
+           #:service-catalog
            #:authenticate
+           #:get-public-url
            ;; Glance API bindings
            #:list-images
            ;; Nova API bindings
