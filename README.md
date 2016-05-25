@@ -1,5 +1,7 @@
 # Trivial-OpenStack
 
+[![Build Status](https://travis-ci.org/zodmaner/trivial-openstack.svg?branch=master)](https://travis-ci.org/zodmaner/trivial-openstack)
+
 Trivial-openstack is a simple OpenStack REST client/library
 implemented in Common Lisp.
 
