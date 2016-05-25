@@ -3,15 +3,18 @@ sudo: required
 
 env:
   matrix:
-    - LISP=sbcl
+    - LISP=sbcl COVERALLS=true
     - LISP=ccl
 
 install:
   # Install cl-travis
   - curl https://raw.githubusercontent.com/luismbo/cl-travis/master/install.sh | bash
+  #Coveralls support
+  - git clone https://github.com/fukamachi/cl-coveralls ~/lisp/cl-coveralls
 
 script:
   - cl -l fiveam
+       -l cl-coveralls
        -e '(ql:quickload :trivial-openstack-test)
            (setf fiveam:*debug-on-error* t)
            (setf fiveam:*debug-on-failure* t)
@@ -19,4 +22,5 @@ script:
                  (lambda (c h)
                    (declare (ignore c h))
                    (uiop:quit -1)))'
-       -e '(trivial-openstack-test:run-all-test)'
+       -e '(coveralls:with-coveralls (:exclude (list "t"))
+             (trivial-openstack-test:run-all-test))'
