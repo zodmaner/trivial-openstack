@@ -15,10 +15,8 @@
          (case service
            (:identity
             (start-mock-identity-server)
-            (when (and (not (null *token*))
-                       (not (null *service-catalog*)))
-              (setf *token* nil)
-              (setf *service-catalog* nil)))
+            (when (not (null *openstack-keystone*))
+              (setf *openstack-keystone* nil)))
            (:image
             (start-mock-image-server))
            (:compute
@@ -36,7 +34,7 @@
   "Test the authentication functionality."
   (with-fixture mock-server (:identity)
     (is-true (authenticate "localhost" "dummy" "swordfish"))
-    (is (equalp *service-catalog*
+    (is (equalp (service-catalog *openstack-keystone*)
                 '(("nova"
                    ("endpoints"
                     ("public-url" . "http://localhost:8774/v2.1/4869da5d1b38f29b4a9f6333972e48db")
@@ -55,7 +53,7 @@
                     ("region" . "RegionOne")
                     ("admin-url" . "http://localhost:5000/v2.0"))
                    ("type" . "identity")))))
-    (is (string= (token *openstack-token*)
+    (is (string= (token *openstack-keystone*)
                  *token*))))
 
 (test image-api
