@@ -60,13 +60,13 @@ argument can be used to send any content with the request."
            (error (format nil "Error code ~A, ~A." status-code reason-phase))))))
 
 (defmacro def-openstack-api (name lambda-list
-                             (stream http-method uri-list &optional json os-token)
+                             (stream http-method uri-list &optional json os-keystone)
                              &body body)
   "Defines a new OpenStack REST API binding."
   (let* ((token-sym (gensym "OS-"))
-         (token-object (if os-token
-                           os-token
-                           '*openstack-token*))
+         (keystone-object (if os-keystone
+                              os-keystone
+                              '*openstack-keystone*))
          (body-car (car body))
          (doc-string (when (stringp body-car)
                        body-car))
@@ -75,7 +75,7 @@ argument can be used to send any content with the request."
                     body)))
     `(defun ,name ,lambda-list
        ,doc-string
-       (with-accessors ((,token-sym token)) ,token-object
+       (with-accessors ((,token-sym token)) ,keystone-object
          (with-openstack-response ,stream ((apply #'join-strings ,@uri-list '())
                                            ,http-method ,token-sym ,json)
            ,@forms)))))
