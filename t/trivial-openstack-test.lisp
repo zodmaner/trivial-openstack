@@ -96,3 +96,7 @@
                 '(("192.168.1.225" ("pool" . "public") ("fixed-ip" . :NULL)))))
     (is-false (associate-floating-ip "0a427e44-8d69-4b02-a747-0eb731ba02ad"
                                      "192.168.1.225"))))
+
+(defun run-all-test ()
+  "Run all tests in the test suite."
+  (run! 'openstack-test-suite))
