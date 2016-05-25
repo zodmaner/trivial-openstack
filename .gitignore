@@ -1,3 +1,4 @@
 *.asd~
 *.fasl
 *.lisp~
+*.yml~
