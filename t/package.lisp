@@ -11,4 +11,5 @@
                 #:stop-mock-image-server)
   (:import-from #:t.mock-compute-server
                 #:start-mock-compute-server
-                #:stop-mock-compute-server))
+                #:stop-mock-compute-server)
+  (:export #:run-all-test))
