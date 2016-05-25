@@ -4,10 +4,7 @@
 
 ;;; OpenStack mock Glance (image) server is defined here.
 
-(defconstant +default-port+ 9292
-  "Default port for the test server.")
-
-(defun start-mock-image-server (&key (port +default-port+))
+(defun start-mock-image-server (&key (port 9292))
   "Starts the server by starting the easy-acceptor and returns a stop-server
 closure function that can be used to stop the active acceptor and shutdown
 the server."

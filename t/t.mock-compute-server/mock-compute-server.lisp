@@ -4,9 +4,7 @@
 
 ;;; OpenStack mock Nova (compute) server is defined here.
 
-(defconstant +default-port+ 8774)
-
-(defun start-mock-compute-server (&key (port +default-port+))
+(defun start-mock-compute-server (&key (port 8774))
   "Starts the server by starting the easy-acceptor and returns a
 stop-server closure function that can be used to stop the active
 acceptor and shutdown the server."

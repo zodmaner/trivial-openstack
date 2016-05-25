@@ -4,9 +4,6 @@
 
 ;;; OpenStack mock Keystone (identity) server is defined here.
 
-(defconstant +default-port+ 5000
-  "Default port for the test server.")
-
 (defvar *tenant-id* "4869da5d1b38f29b4a9f6333972e48db"
   "A dummy tenant ID.")
 
@@ -18,7 +15,7 @@
    t
    (local-time:timestamp+ (local-time:now) 1 :hour)))
 
-(defun start-mock-identity-server (&key (port +default-port+))
+(defun start-mock-identity-server (&key (port 5000))
   "Starts the server by starting the easy-acceptor and returns a stop-server
 closure function that can be used to stop the active acceptor and shutdown
 the server."
