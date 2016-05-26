@@ -4,7 +4,6 @@
   (:use #:cl
         #:alexandria)
   (:export #:get-value
-           #:with-openstack-response
            #:def-openstack-api
            ;; Keystone API bindings
            #:*openstack-keystone*
