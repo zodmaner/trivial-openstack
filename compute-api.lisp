@@ -49,9 +49,9 @@
 (def-openstack-api create-server (server-name image-id flavor-id)
     (response :post ((get-public-url "nova") "/servers")
               (st-json:write-json-to-string
-               (alexandria:plist-hash-table
+               (plist-hash-table
                 (list "server"
-                      (alexandria:plist-hash-table
+                      (plist-hash-table
                        (list "name" server-name
                              "imageRef" image-id
                              "flavorRef" flavor-id))))))
@@ -76,7 +76,7 @@
 (def-openstack-api create-floating-ip (&key (pool "public"))
     (response :post ((get-public-url "nova") "/os-floating-ips")
               (st-json:write-json-to-string
-               (alexandria:plist-hash-table
+               (plist-hash-table
                 (list "pool" pool))))
   "Creates/allocates a new floating IP."
   (st-json:getjso* "floating_ip.ip" (st-json:read-json response)))
@@ -84,9 +84,9 @@
 (def-openstack-api associate-floating-ip (server-id floating-ip)
     (response :post ((get-public-url "nova") "/servers/" server-id "/action")
               (st-json:write-json-to-string
-               (alexandria:plist-hash-table
+               (plist-hash-table
                 (list "addFloatingIp"
-                      (alexandria:plist-hash-table
+                      (plist-hash-table
                        (list "address" floating-ip))))))
   "Associates a floating IP with an active server."
   response)
@@ -106,9 +106,9 @@
   "Adds a security rule that accepts all incoming ICMP connection to
 the default security group."
   (create-default-security-group-rule (st-json:write-json-to-string
-                                       (alexandria:plist-hash-table
+                                       (plist-hash-table
                                         (list "security_group_default_rule"
-                                              (alexandria:plist-hash-table
+                                              (plist-hash-table
                                                (list "ip_protocol" "ICMP"
                                                      "from_port" "-1"
                                                      "to_port" "-1"
@@ -118,9 +118,9 @@ the default security group."
   "Adds a security rule that accepts all incoming TCP connection to
 the default security group."
   (create-default-security-group-rule (st-json:write-json-to-string
-                                       (alexandria:plist-hash-table
+                                       (plist-hash-table
                                         (list "security_group_default_rule"
-                                              (alexandria:plist-hash-table
+                                              (plist-hash-table
                                                (list "ip_protocol" "TCP"
                                                      "from_port" "1"
                                                      "to_port" "65535"
@@ -130,9 +130,9 @@ the default security group."
   "Adds a security rule that accepts all incoming UDP connection to
 the default security group."
   (create-default-security-group-rule (st-json:write-json-to-string
-                                       (alexandria:plist-hash-table
+                                       (plist-hash-table
                                         (list "security_group_default_rule"
-                                              (alexandria:plist-hash-table
+                                              (plist-hash-table
                                                (list "ip_protocol" "UDP"
                                                      "from_port" "1"
                                                      "to_port" "65535"

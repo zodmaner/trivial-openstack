@@ -45,29 +45,29 @@ and shutdown the server."
        (when (and (string= username "dummy") (string= password "swordfish")
                   (string= tenant-name "dummy"))
          (st-json:write-json-to-string
-          (alexandria:plist-hash-table
+          (plist-hash-table
            (list "access"
-                 (alexandria:plist-hash-table
+                 (plist-hash-table
                   (list "token"
-                        (alexandria:plist-hash-table
+                        (plist-hash-table
                          (list "id" *token* "expires" (make-token-expiration-time)))
                         "serviceCatalog"
                         (list
-                         (alexandria:plist-hash-table
+                         (plist-hash-table
                           (list "name" "nova" "type" "compute"
-                                "endpoints" (list (alexandria:plist-hash-table
+                                "endpoints" (list (plist-hash-table
                                                    (list "publicURL" #Uhttp://localhost:8774/v2.1/{*tenant-id*}
                                                          "adminURL" #Uhttp://localhost:8774/v2.1/{*tenant-id*}
                                                          "region" "RegionOne")))))
-                         (alexandria:plist-hash-table
+                         (plist-hash-table
                           (list "name" "glance" "type" "image"
-                                "endpoints" (list (alexandria:plist-hash-table
+                                "endpoints" (list (plist-hash-table
                                                    (list "publicURL" #Uhttp://localhost:9292
                                                          "adminURL" #Uhttp://localhost:9292
                                                          "region" "RegionOne")))))
-                         (alexandria:plist-hash-table
+                         (plist-hash-table
                           (list "name" "keystone" "type" "identity"
-                                "endpoints" (list (alexandria:plist-hash-table
+                                "endpoints" (list (plist-hash-table
                                                    (list "publicURL" #Uhttp://localhost:5000/v2.0
                                                          "adminURL" #Uhttp://localhost:5000/v2.0
                                                          "region" "RegionOne"))))))))))))))))

@@ -1,7 +1,8 @@
 ;;;; package.lisp
 
 (defpackage #:trivial-openstack
-  (:use #:cl)
+  (:use #:cl
+        #:alexandria)
   (:export #:get-value
            #:with-openstack-response
            #:def-openstack-api

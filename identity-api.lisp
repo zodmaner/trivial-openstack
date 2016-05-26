@@ -35,16 +35,16 @@ that is returned to a specified stream symbol."
                 :post
                 nil
                 (st-json:write-json-to-string
-                 (alexandria:plist-hash-table
+                 (plist-hash-table
                   (list "auth"
-                        (alexandria:plist-hash-table
+                        (plist-hash-table
                          (list "tenantName" (if (null (tenant-name ,os-c))
                                                 (progn
                                                   (setf (tenant-name ,os-c) (username ,os-c))
                                                   (tenant-name ,os-c))
                                                 (tenant-name ,os-c))
                                "passwordCredentials"
-                               (alexandria:plist-hash-table
+                               (plist-hash-table
                                 (list "username" (username ,os-c)
                                       "password" (password ,os-c)))))))))
      ,@body))

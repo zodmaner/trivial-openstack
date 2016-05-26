@@ -1,7 +1,8 @@
 ;;;; t.mock-compute-server module's package.lisp
 
 (defpackage #:t.mock-compute-server
-  (:use #:cl)
+  (:use #:cl
+        #:alexandria)
   (:import-from #:t.mock-identity-server
                 #:*tenant-id*
                 #:*token*)

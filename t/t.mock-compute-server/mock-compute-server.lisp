@@ -24,28 +24,28 @@ acceptor and shutdown the server."
     (:get
      (when (string= *token* (hunchentoot:header-in* "X-Auth-Token"))
        (st-json:write-json-to-string
-        (alexandria:plist-hash-table
+        (plist-hash-table
          (list "flavors"
                (list
-                (alexandria:plist-hash-table
+                (plist-hash-table
                  (list "name" "m1.tiny"
                        "id" "1"))
-                (alexandria:plist-hash-table
+                (plist-hash-table
                  (list "name" "m1.small"
                        "id" "2"))
-                (alexandria:plist-hash-table
+                (plist-hash-table
                  (list "name" "m1.medium"
                        "id" "3"))
-                (alexandria:plist-hash-table
+                (plist-hash-table
                  (list "name" "m1.large"
                        "id" "4"))
-                (alexandria:plist-hash-table
+                (plist-hash-table
                  (list "name" "m1.nano"
                        "id" "42"))
-                (alexandria:plist-hash-table
+                (plist-hash-table
                  (list "name" "m1.xlarge"
                        "id" "5"))
-                (alexandria:plist-hash-table
+                (plist-hash-table
                  (list "name" "m1.micro"
                        "id" "84"))))))))))
 
@@ -62,9 +62,9 @@ acceptor and shutdown the server."
     (:get
      (when (string= *token* (hunchentoot:header-in* "X-Auth-Token"))
        (st-json:write-json-to-string
-        (alexandria:plist-hash-table
+        (plist-hash-table
          (list "flavor"
-               (alexandria:plist-hash-table
+               (plist-hash-table
                 (list "name" "m1.tiny"
                       "vcpus" 1
                       "ram" 512
@@ -87,17 +87,17 @@ acceptor and shutdown the server."
                     (string= "c4947a88-3b38-44d5-b605-edad3cf1191b" image-ref)
                     (string= "1" flavor-ref))
            (st-json:write-json-to-string
-            (alexandria:plist-hash-table
+            (plist-hash-table
              (list "server"
-                   (alexandria:plist-hash-table
+                   (plist-hash-table
                     (list "id" "0a427e44-8d69-4b02-a747-0eb731ba02ad")))))))))
     (:get
      (when (string= *token* (hunchentoot:header-in* "X-Auth-Token"))
        (st-json:write-json-to-string
-        (alexandria:plist-hash-table
+        (plist-hash-table
          (list "servers"
                (list
-                (alexandria:plist-hash-table
+                (plist-hash-table
                  (list "name" "test-00"
                        "id" "0a427e44-8d69-4b02-a747-0eb731ba02ad"))))))))))
 
@@ -108,18 +108,18 @@ acceptor and shutdown the server."
     (:get
      (when (string= *token* (hunchentoot:header-in* "X-Auth-Token"))
        (st-json:write-json-to-string
-        (alexandria:plist-hash-table
+        (plist-hash-table
          (list "servers"
                (list
-                (alexandria:plist-hash-table
+                (plist-hash-table
                  (list "name" "test-00"
                        "id" "0a427e44-8d69-4b02-a747-0eb731ba02ad"
                        "status" "ACTIVE"
                        "addresses"
-                       (alexandria:plist-hash-table
+                       (plist-hash-table
                         (list "private"
                               (list
-                               (alexandria:plist-hash-table
+                               (plist-hash-table
                                 (list "addr" "10.0.0.2"
                                       "OS-EXT-IPS:type" "fixed")))))))))))))))
 
@@ -149,17 +149,17 @@ acceptor and shutdown the server."
               (pool (st-json:getjso "pool" request-jso)))
          (when (string= "public" pool)
            (st-json:write-json-to-string
-            (alexandria:plist-hash-table
+            (plist-hash-table
              (list "floating_ip"
-                   (alexandria:plist-hash-table
+                   (plist-hash-table
                     (list "ip" "192.168.1.225")))))))))
     (:get
      (when (string= *token* (hunchentoot:header-in* "X-Auth-Token"))
        (st-json:write-json-to-string
-        (alexandria:plist-hash-table
+        (plist-hash-table
          (list "floating_ips"
                (list
-                (alexandria:plist-hash-table
+                (plist-hash-table
                  (list "ip" "192.168.1.225"
                        "fixed_ip" :null
                        "pool" "public"))))))))))

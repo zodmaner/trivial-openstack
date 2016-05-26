@@ -1,7 +1,8 @@
 ;;;; t.mock-identity-server module's package.lisp
 
 (defpackage #:t.mock-identity-server
-  (:use #:cl)
+  (:use #:cl
+        #:alexandria)
   (:export #:*tenant-id*
            #:*token*
            #:start-mock-identity-server
