@@ -6,6 +6,16 @@
 Trivial-openstack is a simple OpenStack REST client/library
 implemented in Common Lisp.
 
+## Installation
+
+Trivial-openstack is available via
+[Quicklisp](https://www.quicklisp.org), and can be installed using the
+following command:
+
+````lisp
+CL-USER> (ql:quickload 'trivial-openstack)
+````
+
 ## Getting Started
 
 Getting started with trivial-openstack is easy. The first thing we
