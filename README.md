@@ -8,7 +8,7 @@ implemented in Common Lisp.
 
 ## Installation
 
-Trivial-openstack is available via
+Since May 1, 2016, trivial-openstack is available via
 [Quicklisp](https://www.quicklisp.org), and can be installed using the
 following command:
 
