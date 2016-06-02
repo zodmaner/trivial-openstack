@@ -3,12 +3,12 @@
 [![Build Status](https://travis-ci.org/zodmaner/trivial-openstack.svg?branch=master)](https://travis-ci.org/zodmaner/trivial-openstack)
 [![Coverage Status](https://coveralls.io/repos/github/zodmaner/trivial-openstack/badge.svg?branch=master)](https://coveralls.io/github/zodmaner/trivial-openstack?branch=master)
 
-Trivial-openstack is a simple OpenStack REST client/library
+Trivial-OpenStack is a simple OpenStack REST client/library
 implemented in Common Lisp.
 
 ## Installation
 
-Since May 1, 2016, trivial-openstack is available via
+Since May 1, 2016, Trivial-OpenStack is available via
 [Quicklisp](https://www.quicklisp.org), and can be installed using the
 following command:
 
@@ -18,7 +18,7 @@ CL-USER> (ql:quickload 'trivial-openstack)
 
 ## Getting Started
 
-Getting started with trivial-openstack is easy. The first thing we
+Getting started with Trivial-OpenStack is easy. The first thing we
 need to do is to authenticate with the OpenStack Keystone (identity)
 service:
 
