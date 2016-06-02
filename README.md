@@ -6,6 +6,23 @@
 Trivial-OpenStack is a simple OpenStack REST client/library
 implemented in Common Lisp.
 
+Currently, it offers bindings for the following OpenStack services:
+
+###### Keystone (Identity) Service
+
+* Authenticate and obtain token and service endpoints.
+
+###### Glance (Image) Service
+
+* List currently available images
+
+###### Nova (Compute) Service
+
+* List currently available flavors
+* List, create, and delete servers
+* List, create, and associate floating IPs
+* List and create rules in the default security group
+
 ## Installation
 
 Since May 1, 2016, Trivial-OpenStack is available via
