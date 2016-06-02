@@ -8,20 +8,22 @@ implemented in Common Lisp.
 
 Currently, it offers bindings for the following OpenStack services:
 
-###### Keystone (Identity) Service
+#### Keystone (Identity) Service
 
 * Authenticate and obtain token and service endpoints.
 
-###### Glance (Image) Service
+#### Glance (Image) Service
 
 * List currently available images
 
-###### Nova (Compute) Service
+#### Nova (Compute) Service
 
 * List currently available flavors
 * List, create, and delete servers
 * List, create, and associate floating IPs
 * List and create rules in the default security group
+
+Expect full documentation in the near future.
 
 ## Installation
 
@@ -59,8 +61,6 @@ TRIVIAL-OPENSTACK> (create-server "test-00" "c4947a88-3b38-44d5-b605-edad3cf1191
 "0a427e44-8d69-4b02-a747-0eb731ba02ad"
 TRIVIAL-OPENSTACK> 
 ````
-
-Expect full documentation in the near future.
 
 ## Dependencies
 
