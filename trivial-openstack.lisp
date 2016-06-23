@@ -42,7 +42,7 @@ with the request."
              (cond
                ((null args) (cond
                               (x (cons :additional-headers
-                                       (cons (list (cons "X-Auth-Token" x))
+                                       (cons `(list (cons "X-Auth-Token" ,x))
                                              (gen-http-request-args args nil c))))
                               (c (cons :content
                                        (cons c
