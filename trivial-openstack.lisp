@@ -50,11 +50,12 @@ with the request."
                               (t '())))
                (t (cons (car args)
                         (gen-http-request-args (cdr args) x c))))))
-    (let* ((initial-args (list uri
-                               :want-stream t
-                               :content-type "application/json"
-                               :method http-method))
-           (http-request-args (gen-http-request-args initial-args x-auth-token content))
+    (let* ((http-request-args (gen-http-request-args (list uri
+                                                           :want-stream t
+                                                           :content-type "application/json"
+                                                           :method http-method)
+                                                     x-auth-token
+                                                     content))
            (response-body-stream (gensym "W-OS-"))
            (status-code (gensym "W-OS-"))
            (headers (gensym "W-OS-"))
