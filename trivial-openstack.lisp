@@ -20,8 +20,9 @@ rightmost) key.
 Note that supplying multiple keys only makes sense when the alist has
 other alists nested inside."
   (if (cdr keys)
-      (let ((new-alist (assoc-value alist (car keys) :test #'string=)))
-        (apply #'get-value new-alist (cdr keys)))
+      (apply #'get-value
+             (assoc-value alist (car keys) :test #'string=)
+             (cdr keys))
       (assoc-value alist (car keys) :test #'string=)))
 
 (defmacro with-openstack-response (response-stream (uri http-method &optional x-auth-token content)
