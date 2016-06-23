@@ -84,19 +84,27 @@ with the request."
                              (stream http-method uri-list &optional json os-keystone)
                              &body body)
   "Defines a new OpenStack REST API binding."
-  (let* ((token-sym (gensym "OS-"))
-         (keystone-object (if os-keystone
+  (let* ((keystone-object (if os-keystone
                               os-keystone
                               '*openstack-keystone*))
-         (body-car (car body))
-         (doc-string (when (stringp body-car)
-                       body-car))
-         (forms (if doc-string
-                    (cdr body)
-                    body)))
-    `(defun ,name ,lambda-list
-       ,doc-string
-       (with-accessors ((,token-sym token)) ,keystone-object
-         (with-openstack-response ,stream ((apply #'join-strings ,@uri-list '())
-                                           ,http-method ,token-sym ,json)
-           ,@forms)))))
+         (token (gensym "OS-TOKEN-")))
+    (multiple-value-bind (forms doc-string declaration)
+        ((lambda (body)
+           (cond
+             ((listp (car body))
+              (if (eql 'declare (caar body))
+                  (if (stringp (cadr body))
+                      (values (cddr body) (cadr body) (car body))
+                      (values (cdr body) nil (car body)))
+                  body))
+             ((stringp (car body))
+              (values (cdr body) (car body)))))
+         body)
+      `(defun ,name ,lambda-list
+         ,@(if declaration
+               (list declaration doc-string)
+               (list doc-string))
+         (with-accessors ((,token token)) ,keystone-object
+           (with-openstack-response ,stream ((apply #'join-strings ,@uri-list '())
+                                             ,http-method ,token ,json)
+             ,@forms))))))
