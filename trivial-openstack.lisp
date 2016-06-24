@@ -51,27 +51,27 @@ with the request."
                               (t '())))
                (t (cons (car args)
                         (gen-http-request-args (cdr args) x c))))))
-    (let* ((http-request-args (gen-http-request-args (list uri
-                                                           :want-stream t
-                                                           :content-type "application/json"
-                                                           :method http-method)
-                                                     x-auth-token
-                                                     content))
-           (response-body-stream (gensym "W-OS-"))
-           (status-code (gensym "W-OS-"))
-           (headers (gensym "W-OS-"))
-           (uri (gensym "W-OS-"))
-           (stream (gensym "W-OS-"))
-           (must-close (gensym "W-OS-"))
-           (reason-phase (gensym "W-OS-")))
+    (let ((response-body-stream (gensym "W-OS-"))
+          (status-code (gensym "W-OS-"))
+          (headers (gensym "W-OS-"))
+          (reply-uri (gensym "W-OS-"))
+          (stream (gensym "W-OS-"))
+          (must-close (gensym "W-OS-"))
+          (reason-phase (gensym "W-OS-")))
       `(multiple-value-bind (,response-body-stream
                              ,status-code
                              ,headers
-                             ,uri
+                             ,reply-uri
                              ,stream
                              ,must-close
-                             ,reason-phase) (drakma:http-request ,@http-request-args)
-         (declare (ignore ,headers ,uri ,stream ,must-close))
+                             ,reason-phase)
+           (drakma:http-request ,@(gen-http-request-args (list uri
+                                                               :want-stream t
+                                                               :content-type "application/json"
+                                                               :method http-method)
+                                                         x-auth-token
+                                                         content))
+         (declare (ignore ,headers ,reply-uri ,stream ,must-close))
          (if (or (= ,status-code 200)
                  (= ,status-code 202)
                  (= ,status-code 204))
